@@ -1,0 +1,22 @@
+;-;LIFESPAN
+{==================================================================}
+{                          /\     Nova Scotia                      }
+{                         /  \    Department of Natural Resources  }
+{                        /    \   Forestry Division                }
+{ Tel:   (902)-893-5696 /______\  Forest Management Planning       }
+{ Fax:   (902)-893-6102    |      Resource Modeling Section        }
+{==================================================================}
+{ Project     : Crown Lands Strategic Forest Model                 }
+{==================================================================}
+
+{LIFESPANS SECTION}
+
+;POST HARVEST DELAY BREAK-UP AGES
+;-------------------------------------------------------
+  ? ? ? ? ? ? ? ? ? DEL ? ? ? ? ?                 01 ;00 Years
+
+
+;FOREST BREAK-UP AGES
+;-------------------------------------------------------
+  ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? ?               50 ;250 Years
+  ? ? ? ? ? ? ? ? ? ? ?   ?   ? ? ?               60 ;300 Years

@@ -1,0 +1,92 @@
+##############################
+# Woodstock Base Model Files #
+##############################
+
+
+#-----------------------------
+# Specific Files/Directories
+#-----------------------------
+#triad/v1_base_er_lite/Scenarios
+# Debug Scenarios results
+*Debug*/
+
+
+
+#-----------------------------
+# Local Backup Files
+#-----------------------------
+*.rar
+
+
+#-----------------------------
+# Temp Files
+#-----------------------------
+*.xx*
+CLFM.Prescription/
+
+
+
+#-----------------------------
+# Config Files
+#-----------------------------
+*.cfg
+*.log
+
+
+
+#-----------------------------
+# Solver Files
+#-----------------------------
+*.mps
+*.mp[0-9]*
+*.bat
+*.chk
+*.prt
+*.sdw
+*._sdw
+*.sol
+*.par_tmp
+
+
+
+#-----------------------------
+# Complie Directory
+#-----------------------------
+compiled/
+temp/
+
+
+
+#-----------------------------
+# Report files
+#-----------------------------
+*.rtf
+*.txt
+*.csv
+*.wscsv
+*._wscsv
+*.dbf
+*.dbf.[0-9]
+*.dbf.info
+*.jpg
+screenGrab.png
+
+
+
+#-----------------------------
+# history and backups
+#-----------------------------
+__history/
+*.~*
+*.bak
+*.bk*
+*bk.are
+
+
+#-------------------------------
+# Add back in any specific files
+#-------------------------------
+!_model_version_readme.txt
+!CLFMGRAPHICS.CSV
+
+##############################

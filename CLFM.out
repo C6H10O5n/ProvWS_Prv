@@ -1,0 +1,951 @@
+*GROUP -->EBM Indicators  <GROUP>
+;-------------------------------------------------------------
+  FOREACH XX IN(EM,HF,NULL) ;Triad  
+    FOREACH ZZ IN(FLB,WLB,RLB) ;Landbase
+      
+      ;EBM Zone: ZZ Landbase Area Totals
+      ;-------------------------------------------------------------
+      *OUTPUT oELChaZZ.IF(XX=NULL,,tXX)(_TH1)  Total ELC/NDR Area - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+        *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT _AREA
+      
+      ;EBM Zone: ZZ 10-yr Ageclass
+      ;--------------------------------------------------------
+      FOREACH YY IN (2..40,2)
+        *OUTPUT oELChaZZagx.EQUATION(YY * 5).IF(XX=NULL,,tXX)(_TH1)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @AGE(.EQUATION(YY - 1)..YY) _INVENT _AREA
+      ENDFOR
+      *OUTPUT oELChaZZagx200p.IF(XX=NULL,,tXX)(_TH1)
+        *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @AGE(41.._MAXAGE) _INVENT _AREA
+        
+      ;EBM Zone: ZZ by State
+      ;-------------------------------------------------------------
+      FOREACH YY IN (#TH10Rep)
+        *OUTPUT oELChaZZstYY.IF(XX=NULL,,tXX)(_TH1)   Total ELC/NDR Area - ElcUnit:ThemeBased - Landbase:ZZ - State:YY.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? YY ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT _AREA
+      ENDFOR
+
+
+      ;Development Class <GROUP>
+      ;-------------------------------------------------------------
+          
+        ;Base Classes
+        *OUTPUT oEstZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the Establishment Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,1) _INVENT _AREA
+        *OUTPUT oYngZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the Young Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,2) _INVENT _AREA
+        *OUTPUT oMatZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the Mature Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,3..4) _INVENT _AREA
+        *OUTPUT oOldZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the  Multi-Aged/Old Forest Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,5) _INVENT _AREA
+        
+        ;MAT Split 1,2 {40-80; 80-120}
+        *OUTPUT oMt1ZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the Mature-1 Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,3) _INVENT _AREA
+        *OUTPUT oMt2ZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the Mature-2 Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,4) _INVENT _AREA
+          
+        ;MAT+OLD
+        *OUTPUT oMtoZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the Combined Mature1 & Mature2 & Multi-Aged/Old Forest Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,3..5) _INVENT _AREA
+
+        ;EST+YNG
+        *OUTPUT oEsyZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the Combined Establishment & Young Forest Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,1..2) _INVENT _AREA
+        
+        ;Crown / Private distinction
+        FOREACH WW IN(CRN,PRV,NULL) 
+        
+          *OUTPUT oOldWWZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the  Multi-Aged/Old Forest Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+            *SOURCE ? .IF(WW=NULL,?,WWAll) ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,5) _INVENT _AREA
+
+          *OUTPUT oMtoWWZZ.IF(XX=NULL,,tXX)(_TH1)  Area in the  Combined Mature1 & Mature2 & Multi-Aged/Old Forest Development Class - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+            *SOURCE ? .IF(WW=NULL,?,WWAll) ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yDevCls,3..5) _INVENT _AREA
+            
+        ENDFOR
+          
+        ;Development Class Percents
+        *OUTPUT oOldPZZ.IF(XX=NULL,,tXX)(_TH1) %Old - ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE oOldZZ.IF(XX=NULL,,tXX) / oELChaZZ.IF(XX=NULL,,tXX) * 100
+        *OUTPUT oMtoPZZ.IF(XX=NULL,,tXX)(_TH1) %Mto - ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE oMtoZZ.IF(XX=NULL,,tXX) / oELChaZZ.IF(XX=NULL,,tXX) * 100
+        *OUTPUT oEsyPZZ.IF(XX=NULL,,tXX)(_TH1) %Esy - ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE oEsyZZ.IF(XX=NULL,,tXX) / oELChaZZ.IF(XX=NULL,,tXX) * 100
+      
+      ;<ENDGROUP> Development Class
+      
+      
+      ;Seral Stage Class <GROUP>
+      ;-------------------------------------------------------------
+
+        ;Base Classes
+        *OUTPUT oEarZZ.IF(XX=NULL,,tXX)(_TH1)     Area in an Early Seral Stage - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(ySerDevCls,13..15) _INVENT _AREA
+        *OUTPUT oMidZZ.IF(XX=NULL,,tXX)(_TH1)     Area in an Mid Seral Stage - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(ySerDevCls,23..25) _INVENT _AREA
+        *OUTPUT oLatZZ.IF(XX=NULL,,tXX)(_TH1)     Area in an Late Seral Stage - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(ySerDevCls,33..35) _INVENT _AREA
+
+          ;Crown
+          *OUTPUT oLatCrnZZ.IF(XX=NULL,,tXX)(_TH1)     Area in an Late Seral Stage - ElcUnit:ThemeBased - Landbase:XX - Owner:Crown
+            *SOURCE ? CRNALL ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(ySerDevCls,33..35) _INVENT _AREA
+          ;Private
+          *OUTPUT oLatPrvZZ.IF(XX=NULL,,tXX)(_TH1)     Area in an Late Seral Stage - ElcUnit:ThemeBased - Landbase:XX - Owner:Private
+            *SOURCE ? PRVALL ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(ySerDevCls,33..35) _INVENT _AREA
+            
+        ;Seral Class Percents
+        *OUTPUT oLatPZZ.IF(XX=NULL,,tXX)(_TH1) %Lat - ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE oLatZZ.IF(XX=NULL,,tXX) /  oMtoZZ.IF(XX=NULL,,tXX) * 100
+
+      ;<ENDGROUP> Seral Class
+
+
+      ;Forest Community <GROUP>
+      ;-------------------------------------------------------------
+
+        *OUTPUT oHIHwZZ.IF(XX=NULL,,tXX)(_TH1)       Area in a HIHw(101) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,101) _INVENT _AREA
+        *OUTPUT oHITHwZZ.IF(XX=NULL,,tXX)(_TH1)      Area in a HITHw(102) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,102) _INVENT _AREA
+        *OUTPUT oHTHwZZ.IF(XX=NULL,,tXX)(_TH1)       Area in a HTHw(103) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,103) _INVENT _AREA
+        *OUTPUT oMIHwHSZZ.IF(XX=NULL,,tXX)(_TH1)     Area in a MIHwHS(201) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,201) _INVENT _AREA
+        *OUTPUT oMIHwSHZZ.IF(XX=NULL,,tXX)(_TH1)     Area in a MIHwSH(202) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,202) _INVENT _AREA
+        *OUTPUT oMTHwZZ.IF(XX=NULL,,tXX)(_TH1)       Area in a MTHw(203) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,203) _INVENT _AREA
+        *OUTPUT oSrSbSDomZZ.IF(XX=NULL,,tXX)(_TH1)   Area in a SrSbSDom(301) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,301) _INVENT _AREA
+        *OUTPUT oSwSDomZZ.IF(XX=NULL,,tXX)(_TH1)     Area in a SwSDom(302) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,302) _INVENT _AREA
+        *OUTPUT oSbFDomZZ.IF(XX=NULL,,tXX)(_TH1)     Area in a SbFDom(303) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,303) _INVENT _AREA
+        *OUTPUT oSSpbFDomZZ.IF(XX=NULL,,tXX)(_TH1)   Area in a SSpbFDom(304) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,304) _INVENT _AREA
+        *OUTPUT oSPiDomZZ.IF(XX=NULL,,tXX)(_TH1)     Area in a SPiDom(305) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,305) _INVENT _AREA
+        *OUTPUT oSMHePiSpZZ.IF(XX=NULL,,tXX)(_TH1)   Area in a SMHePiSp(306) Forest Community - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,306) _INVENT _AREA
+        *OUTPUT oUnkForCommZZ.IF(XX=NULL,,tXX)(_TH1) Area in an Undetermined Forest Community(0) - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @YLD(yForComm,0) _INVENT _AREA
+
+      ;<ENDGROUP> Forest Community
+      
+      
+      ;Individual Species Inventory Volume <GROUP>
+      ;-------------------------------------------------------------
+
+        ;FOREACH SS IN(T,S,H,SPBF,PIEHTL,RS,BS,WS,BF,WP,RP,EH,TL,RM,WB,XA,SM,BE,YB,RO)
+        ;  *OUTPUT oVolSSZZ.IF(XX=NULL,,tXX)(_TH1) Invnetory Volume - Species:SS - ElcUnit:ThemeBased - Landbase:ZZ.IF(XX=NULL, , Triad Zone XX)
+        ;    *SOURCE ? ? ? ? ? ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT ySSv
+        ;ENDFOR
+
+      ;<ENDGROUP> Individual Species Inventory Volume
+            
+    ENDFOR
+  ENDFOR
+  
+  
+;<ENDGROUP> EBM Indicators
+
+
+
+*GROUP EBM Indicator Percentages By ER/NDR  <GROUP>
+;-------------------------------------------------------------
+  FOREACH ZZ IN (#opERs)
+    FOREACH XX IN (#opZZEUs)
+      FOREACH YY IN (FLB,WLB,RLB) ;Landbase
+        FOREACH WW IN (CRN,PRV,NULL); Crown / Pritate distinction
+
+            *OUTPUT oELCha.IF(WW=NULL,,WW)YYXX  XX - YY
+              *SOURCE XX .IF(WW=NULL,?,WWAll) ? ? ? ? ? ? ? ? YY YY ? ? ? _INVENT _AREA
+
+            *OUTPUT oOld.IF(WW=NULL,,WW)YYXX OLD - XX - YY
+              *SOURCE XX .IF(WW=NULL,?,WWAll) ? ? ? ? ? ? ? ? YY YY ? ? ? @YLD(yDevCls,5) _INVENT _AREA
+            
+            *OUTPUT oM2o.IF(WW=NULL,,WW)YYXX  M2O - XX - Landbase:YY
+              *SOURCE XX .IF(WW=NULL,?,WWAll) ? ? ? ? ? ? ? ? YY YY ? ? ? @YLD(yDevCls,4..5) _INVENT _AREA
+            
+            *OUTPUT oMto.IF(WW=NULL,,WW)YYXX  MTO - XX - Landbase:YY
+              *SOURCE XX .IF(WW=NULL,?,WWAll) ? ? ? ? ? ? ? ? YY YY ? ? ? @YLD(yDevCls,3..5) _INVENT _AREA
+            
+            *OUTPUT oLat.IF(WW=NULL,,WW)YYXX  LAT - XX - Landbase:YY
+              *SOURCE XX .IF(WW=NULL,?,WWAll) ? ? ? ? ? ? ? ? YY YY ? ? ? @YLD(ySerDevCls,33..35) _INVENT _AREA
+
+            *OUTPUT oOldYYP.IF(WW=NULL,,WW)XX %OLD - XX - YY
+              *SOURCE oOld.IF(WW=NULL,,WW)YYXX / oELCha.IF(WW=NULL,,WW)YYXX * 100
+              
+            *OUTPUT oM2oYYP.IF(WW=NULL,,WW)XX %M2O - XX - YY
+              *SOURCE oM2o.IF(WW=NULL,,WW)YYXX / oELCha.IF(WW=NULL,,WW)YYXX * 100
+              
+            *OUTPUT oMtoYYP.IF(WW=NULL,,WW)XX %MTO - XX - YY
+              *SOURCE oMto.IF(WW=NULL,,WW)YYXX / oELCha.IF(WW=NULL,,WW)YYXX * 100
+              
+            *OUTPUT oLatYYP.IF(WW=NULL,,WW)XX %LAT - XX - YY
+              *SOURCE oLat.IF(WW=NULL,,WW)YYXX / oELCha.IF(WW=NULL,,WW)YYXX * 100
+              
+            
+        ENDFOR
+      ENDFOR
+    ENDFOR
+  ENDFOR
+;<ENDGROUP> EBM Indicator Percentages By ER/NDR
+
+
+
+*GROUP Wildlife Indicators for Wildlife Values  ;<GROUP>
+;-------------------------------------------------------------
+  FOREACH XX IN(EM,HF,NULL) ;Triad
+    FOREACH ZZ IN (FLB,WLB,RLB) ;Landbase
+          
+        ;Combined Moose/DWA/Marten
+        ;--------------------------------------------------------
+        *OUTPUT oWildlifeHaZZ.IF(XX=NULL,,tXX) Total ZZ Area Within a Wildlife (Moose,DWA,Marten) Zone - ha.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? wMoose  ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT _AREA +
+                  ? ? ? ? wDWA    ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT _AREA +
+                  ? ? ? ? wMarten ? ? ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT _AREA       
+        FOREACH WW IN (PRV,CRN,NULL)
+        
+            ;Moose
+            *OUTPUT oMooseHaZZ.IF(WW=NULL,,WW)Swd.IF(XX=NULL,,tXX)(_TH1) Area Within Moose Zone of Total Softwood on Working Landbase: By Site - ha, Owner: Crown
+              *SOURCE ? .IF(WW=NULL,?,WWAll) ? ? wMoose ? SWD ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT _AREA
+            *OUTPUT oMooseHaZZ.IF(WW=NULL,,WW)MatSwd.IF(XX=NULL,,tXX)(_TH1) Area Within Moose Zone of Mature Softwood on Working Landbase: By Site - ha, Owner: Crown
+              *SOURCE ? .IF(WW=NULL,?,WWAll) ? ? wMoose ? SWD ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @AGE(8.._MAXAGE) _INVENT _AREA
+
+            ;Deer
+            *OUTPUT oDeerHaZZ.IF(WW=NULL,,WW)Swd.IF(XX=NULL,,tXX)(_TH1) Area Within Deer Zone of Total Softwood on Working Landbase - ElcUnit:ThemeBased - ha, Owner: Crown
+              *SOURCE ? .IF(WW=NULL,?,WWAll) ? ? wDWA ? SWD ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) _INVENT _AREA
+            *OUTPUT oDeerHaZZ.IF(WW=NULL,,WW)MatSwd.IF(XX=NULL,,tXX)(_TH1) Area Within Deer Zone of Mature Softwood on Working Landbase -ElcUnit:ThemeBased - ha, Owner: Crown
+              *SOURCE ? .IF(WW=NULL,?,WWAll) ? ? wDWA ? SWD ? ? ? ZZ ZZ ? ? .IF(XX=NULL,?,XX) @AGE(8.._MAXAGE) _INVENT _AREA
+            
+        ENDFOR ;WW Ownership 
+
+   ENDFOR ;ZZ Landbase
+  ENDFOR ;XX Triad Zone
+;<ENDGROUP> Wildlife 
+  
+  
+  
+*GROUP High Production Forestry ; <GROUP>
+;--------------------------------------------------------
+
+  ;Area Clearcut to Go Into HPF
+  ;--------------------------------------------------------
+  *output oHFXareaCC(_TH2) Area Clearcut to Go Into HPF
+    *Source ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX aCC _AREA
+  *output oHFXareaRegen(_TH2) Regen Area Going Into HPF
+    *Source ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX aHFregen _AREA
+  *output oHFXareaRemoved(_TH2) Suitable Area Removed from HPF
+    *Source ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX aHFremove _AREA
+    
+   ;Area On RX by Spp
+  ;--------------------------------------------------------
+  *OUTPUT oHpfOnRxNsByMu(_th2) HPF-RxNS Area: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxNS
+  *OUTPUT oHpfOnRxWsByMu(_th2) HPF-RxWS Area: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxWS
+  *OUTPUT oHpfOnRxRsByMu(_th2) HPF-RxRS Area: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxRS
+  *OUTPUT oHpfOnRxAllByMu(_th2) HPF-AllRx Area: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxNS +
+            ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxWS +
+            ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxRS
+
+    ;Operational Adjustment Factor
+    *OUTPUT oHpfOnRxNsByMusf(_TH2) AHPF-RxNS Area: ManagementUnit:ThemeBased with Operational Adjustment Factor
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxNS * ySFosf
+    *OUTPUT oHpfOnRxWsByMusf(_TH2) AHPF-RxWS Area: ManagementUnit:ThemeBased with Operational Adjustment Factor
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxWS * ySFosf
+    *OUTPUT oHpfOnRxRsByMusf(_TH2) AHPF-RxRS Area: ManagementUnit:ThemeBased with Operational Adjustment Factor
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxRS * ySFosf
+    *OUTPUT oHpfOnRxAllByMusf(_TH2) AHPF-RxAll Area: ManagementUnit:ThemeBased with Operational Adjustment Factor
+
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxNS * ySFosf +
+            ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxWS * ySFosf +
+            ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF _INVENT yOnHpfRxRS * ySFosf
+
+
+  ;Area Ini RX by Spp
+  ;--------------------------------------------------------
+  *OUTPUT oHpfIniRxNsByMu(_th2) HPF-RxNS Area Strated: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF rHF yIniHpfRxNS
+  *OUTPUT oHpfIniRxWsByMu(_th2) HPF-RxWS Area Started: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF rHF yIniHpfRxWS
+  *OUTPUT oHpfIniRxRsByMu(_th2) HPF-RxRS Area Started: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF rHF yIniHpfRxRS
+  *OUTPUT oHpfIniRxAllByMu(_th2) HPF-AllRx Area Started: ManagementUnit:ThemeBased
+    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF rHF yIniHpfRxNS +
+            ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF rHF yIniHpfRxWS +
+            ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF rHF yIniHpfRxRS
+
+    ;Operational Adjustment Factor
+    *OUTPUT oHpfIniRxNsByMusf(_TH2) AHPF-RxNS Area Started: ManagementUnit:ThemeBased with Operational Adjustment Factor
+      *SOURCE oHpfIniRxNsByMu * ySFosf
+    *OUTPUT oHpfIniRxWsByMusf(_TH2) AHPF-RxWS Area Started: ManagementUnit:ThemeBased with Operational Adjustment Factor
+      *SOURCE oHpfIniRxWsByMu * ySFosf
+    *OUTPUT oHpfIniRxRsByMusf(_TH2) AHPF-RxRS Area Started: ManagementUnit:ThemeBased with Operational Adjustment Factor
+      *SOURCE oHpfIniRxRsByMu * ySFosf
+    *OUTPUT oHpfIniRxAllByMusf(_TH2) AHPF-RxAll Area Started: ManagementUnit:ThemeBased with Operational Adjustment Factor
+      *SOURCE oHpfIniRxAllByMu * ySFosf
+
+
+  ;Area by RX Target Diameter
+  ;--------------------------------------------------------
+    *OUTPUT oHpfOnRxPz08ByMu(_th2) HPF-RxPz08 Area: ManagementUnit:ThemeBased
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF @YLD(yOnHpfRxPsz,08) _INVENT _AREA
+    *OUTPUT oHpfOnRxPz10ByMu(_th2) HPF-RxPz10 Area: ManagementUnit:ThemeBased
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF @YLD(yOnHpfRxPsz,10) _INVENT _AREA
+    *OUTPUT oHpfOnRxPz12ByMu(_th2) HPF-RxPz12 Area: ManagementUnit:ThemeBased
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF @YLD(yOnHpfRxPsz,12) _INVENT _AREA
+
+    ;Area by RX Target Diameter: With Scalefactor
+    *OUTPUT oHpfOnRxPz08ByMusf(_th2) HPF-RxPz08 Area: ManagementUnit:ThemeBased with Operational Scalefactor
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF @YLD(yOnHpfRxPsz,08) _INVENT _AREA * ySFosf
+    *OUTPUT oHpfOnRxPz10ByMusf(_th2) HPF-RxPz10 Area: ManagementUnit:ThemeBased with Operational Scalefactor
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF @YLD(yOnHpfRxPsz,10) _INVENT _AREA * ySFosf
+    *OUTPUT oHpfOnRxPz12ByMusf(_th2) HPF-RxPz12 Area: ManagementUnit:ThemeBased with Operational Scalefactor
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF @YLD(yOnHpfRxPsz,12) _INVENT _AREA * ySFosf
+
+
+  ;Area by Land Ranking
+  ;--------------------------------------------------------
+    *OUTPUT oHpfIniRxRk1ByMu(_th2) HPF-RxRk1 Area: ManagementUnit:ThemeBased
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPS1 aCC _AREA
+    *OUTPUT oHpfIniRxRk2ByMu(_th2) HPF-RxRk2 Area: ManagementUnit:ThemeBased
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPS2 aCC _AREA
+    *OUTPUT oHpfIniRxRk3ByMu(_th2) HPF-RxRk3 Area: ManagementUnit:ThemeBased
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPS3 aCC _AREA
+
+
+    ;Area by Land Ranking: With Scalefactor
+      *OUTPUT oHpfIniRxRk1ByMusf(_th2) HPF-RxRk1 Area: ManagementUnit:ThemeBased with Operational Scalefactor
+        *SOURCE oHpfIniRxRk1ByMu * ySFosf
+      *OUTPUT oHpfIniRxRk2ByMusf(_th2) HPF-RxRk2 Area: ManagementUnit:ThemeBased with Operational Scalefactor
+        *SOURCE oHpfIniRxRk2ByMu * ySFosf
+      *OUTPUT oHpfIniRxRk3ByMusf(_th2) HPF-RxRk3 Area: ManagementUnit:ThemeBased with Operational Scalefactor
+        *SOURCE oHpfIniRxRk3ByMu * ySFosf
+
+    
+;<ENDGROUP> High Production Forestry
+
+
+
+*GROUP Working Landbase ; <GROUP>
+;-------------------------------------------------------------
+  FOREACH XX IN(HF,EM,NULL,HFX,HPF) ;Triad
+
+    ;WLB
+    ;--------------------------------------------------------
+    *OUTPUT ohaFH.IF(XX=NULL,,tXX)   Landbase(ha):Working Forest.IF(XX=NULL, , Triad Zone XX)
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) _INVENT _AREA
+
+
+    ;WLB by ManagementUnit
+    ;--------------------------------------------------------
+    *OUTPUT ohaFHbyMU.IF(XX=NULL,,tXX)(_TH2)   Landbase(ha):Working Forest, MU:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+      *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) _INVENT _AREA
+
+      ;by MU by State
+      FOREACH ZZ IN (#TH10Rep)
+        *OUTPUT ohaFHbyMUstZZ.IF(XX=NULL,,tXX)(_TH2)   Landbase(ha):Working Forest, MU:ThemeBased, State:ZZ.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ZZ WLB WLB ? ? .IF(XX=NULL,?,XX) _INVENT _AREA
+      ENDFOR
+
+
+    ;WLB by 20yr-Ageclass/State
+    ;--------------------------------------------------------
+    FOREACH ZZ IN (#TH10Rep, ALL)
+
+      FOREACH YY IN (4..20,4)
+        *OUTPUT ohaFHbyMUstZZag.EQUATION(YY * 5).IF(XX=NULL,,tXX)(_TH2) Landbase(ha):Working Forest, MU:ThemeBased, State:ZZ, 20yr-Ageclass:YY.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ZZ WLB WLB ? ? .IF(XX=NULL,?,XX) @AGE(.EQUATION(YY - 3)..YY) _INVENT _AREA
+      ENDFOR
+      *OUTPUT ohaFHbyMUstZZag100p.IF(XX=NULL,,tXX)(_TH2)
+        *SOURCE ? ? ? ? ? ? ? ? ? ZZ WLB WLB ? ? .IF(XX=NULL,?,XX) @AGE(21.._MAXAGE) _INVENT _AREA
+
+    ENDFOR
+
+
+    ;WLB by 10yr-Ageclass/State
+    ;--------------------------------------------------------
+    FOREACH ZZ IN (#TH10Rep, ALL)
+
+      FOREACH YY IN (2..40,2)
+        *OUTPUT ohaFHbyMUstZZagx.EQUATION(YY * 5).IF(XX=NULL,,tXX)(_TH2) Landbase(ha):Working Forest, MU:ThemeBased, State:ZZ, 10yr-Ageclass:YY.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ZZ WLB WLB ? ? .IF(XX=NULL,?,XX) @AGE(.EQUATION(YY - 1)..YY) _INVENT _AREA
+      ENDFOR
+      *OUTPUT ohaFHbyMUstZZagx200p.IF(XX=NULL,,tXX)(_TH2)
+        *SOURCE ? ? ? ? ? ? ? ? ? ZZ WLB WLB ? ? .IF(XX=NULL,?,XX) @AGE(41.._MAXAGE) _INVENT _AREA
+
+    ENDFOR
+
+    ;WLB by Ecologial Matrix Treatment Eligibility
+    ;--------------------------------------------------------
+    ;FOREACH ZZ IN (10..60,10)
+    ;  *OUTPUT ohaFHbyMUemtZZ.IF(XX=NULL,,tXX)(_TH2)     Landbase(ha):Working Forest, MU:ThemeBased, yEMT:ZZ
+    ;    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) @YLD(yEMT,ZZ...EQUATION(ZZ + 1)) _INVENT _AREA
+    ;ENDFOR
+    ;FOREACH ZZ IN (11,21,31,41,51,61)
+    ;  *OUTPUT ohaFHbyMUemtZZ.IF(XX=NULL,,tXX)(_TH2)     Landbase(ha):Working Forest, MU:ThemeBased, yEMT:ZZ
+    ;    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) @YLD(yEMT,ZZ) _INVENT _AREA
+    ;ENDFOR
+
+    ;WLB by Ecologial Matrix LIT Class
+    ;--------------------------------------------------------
+    ;FOREACH ZZ IN (10..100,10)
+    ;  *OUTPUT ohaFHbyMUlitZZ.IF(XX=NULL,,tXX)(_TH2)     Landbase(ha):Working Forest, MU:ThemeBased, yLIT:ZZ
+    ;    *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) @YLD(yLITp,.EQUATION(ZZ - 9)..ZZ) _INVENT _AREA
+    ;ENDFOR
+
+  ENDFOR ;XX Triad Zone
+;<ENDGROUP> Working Landbase
+
+
+
+*GROUP FiberFlows ; <GROUP>
+;-------------------------------------------------------------       
+  FOREACH KK IN (S,H,SPBF,PIEHTL) ;,SMYB,IHBERO)
+    FOREACH XX IN(HF,EM,NULL)
+
+      ;Harvest
+      ;--------------------------------------------------------
+      *OUTPUT oacHVvKKbyMU.IF(XX=NULL,,tXX)(_TH2) KK Harvest(acHV) - m3/period, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        FOREACH YY IN(#acHV)
+          .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV .IF(YY.rec < YY.count,+)
+        ENDFOR
+        
+        
+      ;Harvest by MU
+      ;--------------------------------------------------------
+      FOREACH ZZ IN(#opMUs,CRNALL,PRVALL,MUALL)
+        *OUTPUT oacHVvKKmuZZ.IF(XX=NULL,,tXX) KK Harvest(acHV) - m3/period, ManagementUnit:ZZ.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#acHV)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ZZ ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV .IF(YY.rec < YY.count,+)
+          ENDFOR
+      ENDFOR
+      
+      
+      ;Harvest by MU by Product
+      ;--------------------------------------------------------
+      FOREACH ZZ IN(LOG,STD,PLP) ;IF(KK = SPBF*)
+        *OUTPUT oacHVvKKprZZbyMU.IF(XX=NULL,,tXX)(_TH2) KK Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, Product:ZZ.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#acHV)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKVZZ .IF(YY.rec < YY.count,+)
+          ENDFOR
+      ENDFOR
+      *OUTPUT oacHVvKKprSldbyMU.IF(XX=NULL,,tXX)(_TH2) KK Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, Product:SLD.IF(XX=NULL, , Triad Zone XX)
+        *SOURCE oacHVvKKprSTDbyMU.IF(XX=NULL,,tXX) +
+                oacHVvKKprLOGbyMU.IF(XX=NULL,,tXX)
+      
+      
+      
+      ;Harvest by MU by Discount Factor
+      ;--------------------------------------------------------
+      FOREACH ZZ IN (DF10%,DF4%) ;,DF50,PER1)
+        *OUTPUT oacHVvKKbyMUZZ.IF(XX=NULL,,tXX)(_TH2) KK Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, DiscountFactor:ZZ.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#acHV)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV * yZZ .IF(YY.rec < YY.count,+)
+          ENDFOR
+      ENDFOR
+      
+      
+      ;Harvest by MU by State
+      ;--------------------------------------------------------
+      FOREACH ZZ IN (#TH10Rep)
+        *OUTPUT oacHVvKKbyMUstZZ.IF(XX=NULL,,tXX)(_TH2) KK Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, State:ZZ.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#acHV)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ZZ WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV .IF(YY.rec < YY.count,+)
+          ENDFOR
+      ENDFOR
+      
+      
+      ;Harvest by MU by Site
+      ;--------------------------------------------------------
+      FOREACH ZZ IN (#TH09Rep)
+        *OUTPUT oacHVvKKbyMUscZZ.IF(XX=NULL,,tXX)(_TH2) KK Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, SiteClass:ZZ.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#acHV)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ZZ ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV .IF(YY.rec < YY.count,+)
+          ENDFOR
+      ENDFOR
+      
+      
+      ;Harvest by Ecolocial Units
+      ;--------------------------------------------------------
+      *OUTPUT oacHVvKKbyEU.IF(XX=NULL,,tXX)(_TH1) KK Harvest(acHV) - m3/period, EcologicalUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        FOREACH YY IN(#acHV)
+          .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV .IF(YY.rec < YY.count,+)
+        ENDFOR
+
+      ;Harvest by MU by Modelled Ecolocial Units
+      ;--------------------------------------------------------
+      FOREACH ZZ IN (#opEUs)
+        *OUTPUT oacHVvKKbyMUeuZZ.IF(XX=NULL,,tXX)(_TH2) KK Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, Ecodistrict:ZZ.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#acHV)
+            .IF(YY.rec = 1,*SOURCE,       ) ZZ ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV .IF(YY.rec < YY.count,+)
+          ENDFOR
+      ENDFOR
+      
+      
+      ;Harvest by MU by Harvest Action
+      ;--------------------------------------------------------
+      FOREACH ZZ IN (#acHVgr)
+        *OUTPUT oZZvKKbyMU.IF(XX=NULL,,tXX)(_TH2) KK Harvested (ZZ Actions) - m3/period, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#ZZ)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKV .IF(YY.rec < YY.count,+)
+          ENDFOR
+      ENDFOR
+    
+    ENDFOR  ;XX Triad Zone
+  ENDFOR  ;KK Species Group
+;<ENDGROUP> FiberFlows
+
+ 
+ 
+*GROUP FiberFlows:Scaled ; <GROUP>
+;-------------------------------------------------------------  
+  FOREACH XX IN(HF,EM,NULL)
+
+    ;Scaled Harvests
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF,PIEHTL)
+      *OUTPUT oacHVvSSbyMU.IF(XX=NULL,,tXX)sf(_TH2)  SS Harvest(acHV) - m3/period, ManagementUnit:ThemeBased,.IF(XX=NULL, , Triad Zone XX)  Scaled
+        *SOURCE oacHVvSSbyMU.IF(XX=NULL,,tXX) * .IF(SS=H,ySFosfht,ySFosfst)
+    ENDFOR
+    
+    
+    ;Scaled Harvests Discount Factor
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF,PIEHTL)
+      FOREACH ZZ IN (DF10%,DF4%) ;,DF50,PER1)
+        *OUTPUT oacHVvSSbyMU.IF(XX=NULL,,tXX)sfZZ(_TH2)  SS Harvest(acHV) - m3/period, ManagementUnit:ThemeBased,.IF(XX=NULL, , Triad Zone XX)  Scaled, DF10%
+          *SOURCE oacHVvSSbyMU.IF(XX=NULL,,tXX)sf * yZZ
+      ENDFOR
+    ENDFOR
+    
+    
+    ;Scaled Harvests By ManagementUnit
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF)
+      FOREACH ZZ IN(#opMUs,CRNALL,PRVALL,MUALL)
+        *OUTPUT oacHVvSSmuZZ.IF(XX=NULL,,tXX)sf  SS Harvest(acHV) - m3/period, ManagementUnit:ZZ,.IF(XX=NULL, , Triad Zone XX)  Scaled
+          *SOURCE oacHVvSSmuZZ.IF(XX=NULL,,tXX) * .IF(SS=H,ySFosfht,ySFosfst)
+      ENDFOR
+    ENDFOR
+    
+    
+    ;Scaled Harvests By Product
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF)
+      FOREACH ZZ IN(LOG,STD,PLP,SLD)
+        *OUTPUT oacHVvSSprZZbyMU.IF(XX=NULL,,tXX)sf(_TH2) SS Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, Product:ZZ,.IF(XX=NULL, , Triad Zone XX)  Scaled
+          *SOURCE oacHVvSSprZZbyMU.IF(XX=NULL,,tXX) * .IF(SS=H,ySFosfht,ySFosfst)
+      ENDFOR
+    ENDFOR
+    
+    
+    ;Scaled Harvests By Product with Discount Factor
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF)
+      FOREACH ZZ IN(LOG,STD,PLP,SLD)
+        FOREACH KK IN (DF10%,DF4%) ;,DF50,PER1)
+          *OUTPUT oacHVvSSprZZbyMU.IF(XX=NULL,,tXX)sfKK(_TH2) SS Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, Product:ZZ,.IF(XX=NULL, , Triad Zone XX)  Scaled
+            *SOURCE oacHVvSSprZZbyMU.IF(XX=NULL,,tXX)sf * yKK
+        ENDFOR
+      ENDFOR
+    ENDFOR
+    
+    
+    ;Scaled Harvests MU by State
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF)
+      FOREACH ZZ IN (#TH10Rep)
+        *OUTPUT oacHVvSSbyMUstZZ.IF(XX=NULL,,tXX)sf(_TH2) SS Harvest(acHV) - m3/period, ManagementUnit:ThemeBased, State:ZZ.IF(XX=NULL, , Triad Zone XX)  Scaled
+          *SOURCE oacHVvSSbyMUstZZ.IF(XX=NULL,,tXX) * .IF(SS=H,ySFosfht,ySFosfst)
+      ENDFOR
+    ENDFOR
+    
+    
+    ;Scaled Harvests By Ecological Unit By Species
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF)
+      *OUTPUT oacHVvSSbyEU.IF(XX=NULL,,tXX)sf(_TH1) SS Harvest(acHV) - m3/period, EcologicalUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        *SOURCE oacHVvSSbyEU.IF(XX=NULL,,tXX) * .IF(SS=H,ySFosfht,ySFosfst)
+    ENDFOR
+    
+    
+    ;Scaled Harvests MU by Harvest Action
+    ;-------------------------------------------------------------
+    FOREACH SS IN(H,S,SPBF)
+      FOREACH ZZ IN (#acHVgr)
+        *OUTPUT oZZvSSbyMU.IF(XX=NULL,,tXX)sf(_TH2) SS Harvested (ZZ Actions) - m3/period, ManagementUnit:ThemeBased,.IF(XX=NULL, , Triad Zone XX)  Scaled
+          *SOURCE oZZvSSbyMU.IF(XX=NULL,,tXX) * .IF(SS=H,ySFosfht,ySFosfst)
+      ENDFOR
+    ENDFOR
+  ENDFOR ;XX Triad Zone
+;<ENDGROUP> FiberFlows-HarvestWithScaleFactors
+
+
+
+*GROUP GrowingStock ; <GROUP>
+;-------------------------------------------------------------  
+  FOREACH XX IN(HF,EM,NULL)
+    FOREACH KK IN (S,H,SPBF) ;,PIEHTL,SMYB,IHBERO)
+        *OUTPUT ogsvKKbyMU.IF(XX=NULL,,tXX)(_TH2) KK GrowingStock - m3, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) _INVENT YKKV
+        *OUTPUT ogsvKKbyMU.IF(XX=NULL,,tXX)gmt(_TH2) KK GrowingStock - gmt, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? .IF(XX=NULL,?,XX) _INVENT YKKV * .IF(KK=H,yhM3toGmt,ysM3toGmt)
+    ENDFOR ;KK Species Group
+  ENDFOR ;XX Triad Zone
+;<ENDGROUP> GrowingStock
+
+
+
+*GROUP TreatmentArea ; <GROUP>
+;-------------------------------------------------------------  
+  FOREACH XX IN(HF,EM,NULL) ;Triad
+    FOREACH KK IN (#acList) ;Actions
+
+      ;Area (ha)
+      *OUTPUT ohvKKHabyMU.IF(XX=NULL,,tXX)(_TH2) Area Harvested (KK Actions) - ha, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        FOREACH YY IN(#KK)
+          .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") _AREA .IF(YY.rec < YY.count,+)
+        ENDFOR
+        
+      ;with Operational Scalefactor [osf,osf_mos]
+      *OUTPUT ohvKKHabyMU.IF(XX=NULL,,tXX)sf(_TH2) Area Harvested (KK Actions) - ha, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX) with Operational Adjustment Factor [osf,osf_mos]
+        *SOURCE ohvKKHabyMU.IF(XX=NULL,,tXX) * ySFosf
+        
+        
+      ;by State
+      FOREACH ZZ IN (#TH10Rep)
+      *OUTPUT ohvKKHabyMUstZZ.IF(XX=NULL,,tXX)(_TH2) Area Harvested (KK Actions) - ha, ManagementUnit:ThemeBased, State:ZZ.IF(XX=NULL, , Triad Zone XX)
+        FOREACH YY IN(#KK)
+          .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ZZ ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") _AREA .IF(YY.rec < YY.count,+)
+        ENDFOR
+      ENDFOR
+      
+      
+      ;by ELC/NDR Zone
+      *OUTPUT ohvKKHabyEU.IF(XX=NULL,,tXX)(_TH1) Area Harvested (KK Actions) - ha, Th1Based.IF(XX=NULL, , Triad Zone XX)
+        FOREACH YY IN(#KK)
+          .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") _AREA .IF(YY.rec < YY.count,+)
+        ENDFOR
+        
+      ;by ELC/NDR Zone:  Crown / Private
+      *OUTPUT ohvKKHaCrnbyEU.IF(XX=NULL,,tXX)(_TH1) Area Harvested (KK Actions) - ha, Owner: Crown, Th1Based
+        FOREACH YY IN(#KK)
+          .IF(YY.rec = 1,*SOURCE,       ) ? CRNALL ? ? ? ? ? ? ? ? ? ? ? ? ? .REPLACE(.replace(YY,"[","("),"]",")") _AREA .IF(YY.rec < YY.count,+)
+        ENDFOR
+      *OUTPUT ohvKKHaPrvbyEU.IF(XX=NULL,,tXX)(_TH1) Area Harvested (KK Actions) - ha, Owner: Private, Th1Based
+        FOREACH YY IN(#KK)
+          .IF(YY.rec = 1,*SOURCE,       ) ? PRVALL ? ? ? ? ? ? ? ? ? ? ? ? ? .REPLACE(.replace(YY,"[","("),"]",")") _AREA .IF(YY.rec < YY.count,+)
+        ENDFOR
+        
+        
+    ENDFOR ;KK Action List
+  ENDFOR ;XX Triad Zone
+;<ENDGROUP> TreatmentArea
+
+
+
+*GROUP AverageHarvestAttributes; <GROUP>
+;-------------------------------------------------------------  
+  FOREACH XX IN(HF,EM,NULL)
+
+    ;Harvest Average Age
+    ;-------------------------------------------------------------------
+    FOREACH KK IN (acHV,acCC)
+      *OUTPUT ohAvAgeYldKKbyMU.IF(XX=NULL,,tXX)(_TH2)     Total Age Yield of Harvest (KK) age*ha, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        FOREACH YY IN(#KK)
+          .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") _AGE .IF(YY.rec < YY.count,+)
+        ENDFOR
+      *OUTPUT ohAvAgeKKbyMU.IF(XX=NULL,,tXX)(_TH2)        Average Age of Harvest (KK) - age, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        *SOURCE ohAvAgeYldKKbyMU.IF(XX=NULL,,tXX) / ohvKKHabyMU.IF(XX=NULL,,tXX)
+    ENDFOR   
+    
+    
+    ;Harvest Average Volume
+    ;-------------------------------------------------------------------
+    FOREACH KK IN (acHV,acCC)
+      *OUTPUT oKKvTbyMU.IF(XX=NULL,,tXX)(_TH2)        Total Harvest (KK) Volume, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        *SOURCE oKKvHbyMU.IF(XX=NULL,,tXX) + oKKvSbyMU.IF(XX=NULL,,tXX)
+      *OUTPUT ohAvTVolKKbyMU.IF(XX=NULL,,tXX)(_TH2)        Average Harvest Volume (KK) - age, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+        *SOURCE oKKvTbyMU.IF(XX=NULL,,tXX) / ohvKKHabyMU.IF(XX=NULL,,tXX)
+    ENDFOR
+    
+    
+    ;Average MAI
+    ;-------------------------------------------------------------------
+    FOREACH KK IN (T,S,H) ;,SPBF,PIEHTL,SMYB,IHBERO)
+      FOREACH JJ IN (acHV,acCC)
+        ;KKMAI XX
+        *OUTPUT ohAvKKMAIyldJJbyMU.IF(XX=NULL,,tXX)(_TH2)     Total Inventory of Clearcut Harvest MAI - (m3/ha/yr)*ha, ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+          FOREACH YY IN(#JJ)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKMAI .IF(YY.rec < YY.count,+)
+          ENDFOR
+        *OUTPUT ohAvKKMAIJJbyMU.IF(XX=NULL,,tXX)(_TH2)        Average Clearcut Harvest MAI - (m3/ha/yr), ManagementUnit:ThemeBased.IF(XX=NULL, , Triad Zone XX)
+          *SOURCE ohAvKKMAIyldJJbyMU.IF(XX=NULL,,tXX) / ohvJJHabyMU.IF(XX=NULL,,tXX)
+
+        ;KKMAI XX by State
+        FOREACH ZZ IN (#TH10Rep)
+          *OUTPUT ohAvKKMAIyldJJbyMUstZZ.IF(XX=NULL,,tXX)(_TH2)     Total Inventory of Clearcut Harvest MAI - (m3/ha/yr)*ha, ManagementUnit:ThemeBased, State:ZZ.IF(XX=NULL, , Triad Zone XX)
+            FOREACH YY IN(#JJ)
+              .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ZZ ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YKKMAI .IF(YY.rec < YY.count,+)
+            ENDFOR
+          *OUTPUT ohAvKKMAIJJbyMUstZZ.IF(XX=NULL,,tXX)(_TH2)        Average Clearcut Harvest MAI - (m3/ha/yr), ManagementUnit:ThemeBased, State:ZZ.IF(XX=NULL, , Triad Zone XX)
+            *SOURCE ohAvKKMAIyldJJbyMUstZZ.IF(XX=NULL,,tXX) / ohvJJHabyMUstZZ.IF(XX=NULL,,tXX)
+        ENDFOR
+      ENDFOR
+    ENDFOR
+    
+    
+    ;Average QMD - HPF Regimes Only: Note: the current area weighting will need to be changed to a volume weighting
+    ;-------------------------------------------------------------------
+    FOREACH KK IN (T) ;,S,H,SPBF,PIEHTL,SMYB,IHBERO)
+      FOREACH JJ IN (acHV,acCC)
+        *OUTPUT ohAvKKQMDyldJJbyMU.IF(XX=NULL,,tXX)(_TH2)     Total Inventory of Harvest QMD - (cm)*ha, ManagementUnit:ThemeBased
+          FOREACH YY IN(#JJ)
+            .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") YMD .IF(YY.rec < YY.count,+)
+          ENDFOR
+        *OUTPUT ohAvKKQMDJJbyMU.IF(XX=NULL,,tXX)(_TH2)        Average Harvest QMD - (cm), ManagementUnit:ThemeBased
+          *SOURCE ohAvKKQMDyldJJbyMU.IF(XX=NULL,,tXX) / ohvJJHabyMU.IF(XX=NULL,,tXX)
+      ENDFOR
+    ENDFOR
+    
+    
+    
+  ENDFOR ;XX Triad Zone
+;<ENDGROUP> AverageHarvestAttributes
+
+
+
+*GROUP Budgets; <GROUP>
+;-------------------------------------------------------------  
+  FOREACH XX IN(HF,EM,NULL)
+
+    ;Budget - sw=$3.00/m3, hw=$0.60/m3
+    ;-------------------------------------------------------------------
+    FOREACH KK IN(S,H)
+      ;Base Area
+      *OUTPUT oKKBudgetbyMU.IF(XX=NULL,,tXX)(_TH2)  Total Silviculture Budget From KK Harvest, ManagementUnit:ThemeBased
+        *SOURCE oacHVvKKbyMU.IF(XX=NULL,,tXX) * yKKBudgetM3
+
+      ;..With Operational Adjustment Factor [osf,osf_mos]
+      *OUTPUT oKKBudgetbyMU.IF(XX=NULL,,tXX)sf(_TH2)  Total Silviculture Budget From Softwood Harvest, ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+        *SOURCE oacHVvKKbyMU.IF(XX=NULL,,tXX)sf * yKKBudgetGMT
+    ENDFOR
+    *OUTPUT otBudgetbyMU.IF(XX=NULL,,tXX)(_TH2)  Total Silviculture Budget From Softwood + Hardwood Harvest, ManagementUnit:ThemeBased
+      *SOURCE osBudgetbyMU.IF(XX=NULL,,tXX) + ohBudgetbyMU.IF(XX=NULL,,tXX)
+    *OUTPUT otBudgetbyMU.IF(XX=NULL,,tXX)sf(_TH2)  Total Silviculture Budget From Softwood + Hardwood Harvest, ManagementUnit:ThemeBased
+      *SOURCE osBudgetbyMU.IF(XX=NULL,,tXX)sf + ohBudgetbyMU.IF(XX=NULL,,tXX)sf
+    *OUTPUT otBudgetDF4%byMU.IF(XX=NULL,,tXX)(_TH2)  Total Silviculture Budget From Softwood + Hardwood Harvest: Discounted 4%, ManagementUnit:ThemeBased
+      *SOURCE otBudgetbyMU.IF(XX=NULL,,tXX) * yDF4%
+      
+      
+    ;Silviculture Costs
+    ;-------------------------------------------------------------------
+    FOREACH KK IN(PTNR,PLm,PIH,PBH,PNH,EC,PLs,PLp,PLh,PLw,PLa);(PTVR10,PTVR20,PTVR30,PTIS50,PTIS70) ;*** PTNR, just use those two for now.
+      ;Base Area
+      *OUTPUT oKKCostbyMU.IF(XX=NULL,,tXX)(_TH2)  Cost of KK, ManagementUnit:ThemeBased
+        *SOURCE ohvacKKHabyMU.IF(XX=NULL,,tXX) * yKKCostHa
+
+      ;..With Operational Adjustment Factor [osf,osf_mos]
+      *OUTPUT oKKCostbyMU.IF(XX=NULL,,tXX)sf(_TH2)  Cost of KK, ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+        *SOURCE oKKCostbyMU.IF(XX=NULL,,tXX) * ySFosf
+    ENDFOR
+    
+    
+    ;Partial Harvest Costs
+    ;-------------------------------------------------------------------
+    FOREACH KK IN(CT,SH,SL,OR,SC,HC);(IS50,IS70,VR30,VR20,VR10)
+      ;Base Area
+      *OUTPUT oKKCostbyMU.IF(XX=NULL,,tXX)(_TH2)  Cost of KK, ManagementUnit:ThemeBased
+        *SOURCE ohvacKKHabyMU.IF(XX=NULL,,tXX) * yKKCostHa
+
+      ;..With Operational Adjustment Factor [osf,osf_mos]
+      *OUTPUT oKKCostbyMU.IF(XX=NULL,,tXX)sf(_TH2)  Cost of KK, ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+        *SOURCE oKKCostbyMU.IF(XX=NULL,,tXX) * ySFosf
+    ENDFOR
+    
+    
+    ;Aggregate Costs with Anualized Operational Adjustment Factor [osf,osf_mos]
+    ;-------------------------------------------------------------------
+    *OUTPUT oSilvCostbyMU.IF(XX=NULL,,tXX)sf(_TH2)      Cost of Silviculture all Activities (PT,PLm,PLs,PLp,PLh,PLw,PLa,CT,SH,SL,IS,VR30,VR20,VR10), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+      FOREACH YY IN(PTNR,PIH,PBH,PNH,EC,CT,SH,SL,PLs,PLp,PLh,PLw,PLa);(PTVR10,PTVR20,PTVR30,PTIS50,PTIS70,IS50,IS70,VR30,VR20,VR10)
+        .IF(YY.rec = 1,*SOURCE,       ) oYYCostbyMU.IF(XX=NULL,,tXX)sf  .IF(YY.rec < YY.count,+)
+      ENDFOR
+
+    *OUTPUT oSilvCostNoVRbyMU.IF(XX=NULL,,tXX)sf(_TH2)  Cost of Silviculture  (PT,PLi,PLb,PLn,PLs,PLp,PLh,PLw,PLa,CT,SH,SL,IS50,IS70) without cost for(VR), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+      FOREACH YY IN(PTNR,PIH,PBH,PNH,EC,CT,SH,SL,PLs,PLp,PLh,PLw,PLa);(PTVR10,PTVR20,PTVR30,PTIS50,PTIS70,IS50,IS70)
+        .IF(YY.rec = 1,*SOURCE,       ) oYYCostbyMU.IF(XX=NULL,,tXX)sf  .IF(YY.rec < YY.count,+)
+      ENDFOR
+
+    *OUTPUT oSilvCostNoSLVRbyMU.IF(XX=NULL,,tXX)sf(_TH2)  Cost of Silviculture  (PT,PLi,PLb,PLn,PLs,PLp,PLh,PLw,PLa,CT,SH,IS50,IS70) without cost for (SL,VR), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+      FOREACH YY IN(PTNR,PIH,PBH,PNH,EC,CT,SH,PLs,PLp,PLh,PLw,PLa);(PTVR10,PTVR20,PTVR30,PTIS50,PTIS70,IS50,IS70)
+        .IF(YY.rec = 1,*SOURCE,       ) oYYCostbyMU.IF(XX=NULL,,tXX)sf  .IF(YY.rec < YY.count,+)
+      ENDFOR
+
+    *OUTPUT oSilvCostNoPHbyMU.IF(XX=NULL,,tXX)sf(_TH2)  Cost of Silviculture (PT,PLi,PLb,PLn,PLs,PLp,PLh,PLw,PLa) without Including Partial Harvest Costs (SH,CT,IS,SL,VR), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+      FOREACH YY IN(PTNR,PIH,PBH,PNH,EC,PLs,PLp,PLh,PLw,PLa);PLp &PLw each ran fine on their own, (PTNR,PIH,PBH,PNH,EC,PLm,PLs,PLh,PLh,PLa);PLp & PLw generated an infeasible solution when any one of then were added to the prior list.(PTVR10,PTVR20,PTVR30,PTIS50,PTIS70)
+        .IF(YY.rec = 1,*SOURCE,       ) oYYCostbyMU.IF(XX=NULL,,tXX)sf  .IF(YY.rec < YY.count,+)
+      ENDFOR
+
+    *OUTPUT oSilvCostPHbyMU.IF(XX=NULL,,tXX)sf(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,IS,SL,VR30,VR20,VR10), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+      FOREACH YY IN(CT,SH,SL);(IS50,IS70,SL,VR30,VR20,VR10)
+        .IF(YY.rec = 1,*SOURCE,       ) oYYCostbyMU.IF(XX=NULL,,tXX)sf  .IF(YY.rec < YY.count,+)
+      ENDFOR
+
+    *OUTPUT oSilvCostPHNoVRbyMU.IF(XX=NULL,,tXX)sf(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,IS,SL), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+      FOREACH YY IN(CT,SH,SL);(IS50,IS70)
+        .IF(YY.rec = 1,*SOURCE,       ) oYYCostbyMU.IF(XX=NULL,,tXX)sf  .IF(YY.rec < YY.count,+)
+      ENDFOR      
+      
+     
+  ENDFOR ;XX Triad Zone
+;<ENDGROUP> Budgets
+        
+    
+    
+    
+    
+    
+    ;****************************************************************************************************************************************************************************************      
+;****************************************************************************************************************************************************************************************      
+;****************************************************************************************************************************************************************************************      
+;****************************************************************************************************************************************************************************************      
+;****************************************************************************************************************************************************************************************      
+;****************************************************************************************************************************************************************************************      
+;****************************************************************************************************************************************************************************************      
+
+
+
+
+
+
+
+*GROUP ->Budgets
+  ;By Management Unit
+
+    
+
+    
+    ;Silviculture Costs with Operational Adjustment Factor
+    ;*OUTPUT oPIHCostSfobyMU(_TH2)  Cost of Planting, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPIHCostbyMU * ySFosfoper
+    ;*OUTPUT oPBHCostSfobyMU(_TH2)  Cost of Planting, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPBHCostbyMU * ySFosfoper
+    ;*OUTPUT oPNHCostSfobyMU(_TH2)  Cost of Planting, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPNHCostbyMU * ySFosfoper
+    ;*OUTPUT oPLCostSfobyMU(_TH2)   sum
+    ;  *SOURCE oPIHCostSfobyMU + oPBHCostSfobyMU + oPNHCostSfobyMU      
+    ;  
+    ;*OUTPUT oPTCostSfobyMU(_TH2)  Cost of PreCommercial Thinning, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPTNRCostbyMU * ySFosfoper
+    ;*OUTPUT oECCostSfobyMU(_TH2)  Cost of Early Competition Control in Natural, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oECCostbyMU * ySFosfoper
+    ;  
+    ;  
+    ;  
+    ;  
+    ;
+    ;;Silviculture Costs with Anualized Operational Adjustment Factor [osf,osf_mos]
+    ;
+    ;*output oPLCostbyMUsf(_TH2)  sum
+    ;  *SOURCE oPIHCostbyMUsf + oPBHCostbyMUsf + oPNHCostbyMUsf      
+    ;  
+    ;*OUTPUT oPTCostbyMUsf(_TH2)  Cost of PreCommercial Thinning, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oPTNRCostbyMU * ySFosf
+    ;*OUTPUT oECCostbyMUsf(_TH2)  Cost of Early Competition Control in Natural, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oECCostbyMU * ySFosf
+      
+      
+      
+      
+
+    ;Funded Harvest Costs with Operational Adjustment Factor
+    ;*OUTPUT oCTCostSfobyMU(_TH2)  Cost of Commercial Thinning, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oCTCostbyMU * ySFosfoper
+    ;*OUTPUT oSLCostSfobyMU(_TH2)  Cost of Shelterwood Harvest - Initial Removal, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oSLCostbyMU * ySFosfoper
+    ;*OUTPUT oORCostSfobyMU(_TH2)  Cost of Shelterwood Harvest - Final Removal, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oORCostbyMU * ySFosfoper
+    ;*OUTPUT oSCCostSfobyMU(_TH2)  Cost of Mixedwood Partial Cut - Initial Removal, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oSCCostbyMU * ySFosfoper
+    ;*OUTPUT oHCCostSfobyMU(_TH2)  Cost of Mixedwood Partial Cut - Final Removal, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oHCCostbyMU * ySFosfoper
+    ;*OUTPUT oSHCostSfobyMU(_TH2)  Cost of Shelterwood Harvest, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oSHCostbyMU * ySFosfoper
+      
+      
+
+    ;Annual Funded Harvest Costs with Operational Adjustment Factor [osf,osf_mos]
+    ;*OUTPUT oCTCostbyMUsf(_TH2)  Cost of Commercial Thinning, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oCTCostbyMU * ySFosf
+    ;*OUTPUT oSLCostbyMUsf(_TH2)  Cost of Shelterwood Harvest - Initial Removal, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oSLCostbyMU * ySFosf
+    ;*OUTPUT oORCostbyMUsf(_TH2)  Cost of Shelterwood Harvest - Final Removal, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oORCostbyMU * ySFosf
+    ;*OUTPUT oSCCostbyMUsf(_TH2)  Cost of Mixedwood Partial Cut - Initial Removal, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oSCCostbyMU * ySFosf
+    ;*OUTPUT oHCCostbyMUsf(_TH2)  Cost of Mixedwood Partial Cut - Final Removal, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oHCCostbyMU * ySFosf
+    ;*OUTPUT oSHCostbyMUsf(_TH2)  Cost of Shelterwood Harvest, ManagementUnit:ThemeBased, with Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oSHCostbyMU * ySFosf
+
+    
+    
+    ;Aggregate Costs
+    ;*OUTPUT oSilvCostbyMU(_TH2)      Cost of Silviculture all Activities (PL,EC,PT,CT,SH,SL,OR,SC,HC), ManagementUnit:ThemeBased
+    ;  *SOURCE oPLCostbyMU + oPTCostbyMU + oECCostbyMU  + oCTCostbyMU  + oSHCostbyMU + oSLCostbyMU + oORCostbyMU + oSCCostbyMU + oHCCostbyMU
+    ;*OUTPUT oSilvCostNoORHCbyMU(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH,SL,SC) without cost for shelterwood/partial cut - final removal (OR,HC), ManagementUnit:ThemeBased
+    ;  *SOURCE oPLCostbyMU + oPTCostbyMU + oCTCostbyMU + oSLCostbyMU + oSCCostbyMU  + oSHCostbyMU + oECCostbyMU
+    ;*OUTPUT oSilvCostNoORHCSCbyMU(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH,SL) without cost for shelterwood - final removal (OR) and Mixedwood Partial (SC,HC), ManagementUnit:ThemeBased
+    ;  *SOURCE oPLCostbyMU + oPTCostbyMU + oCTCostbyMU + oSLCostbyMU + oSHCostbyMU + oECCostbyMU
+    ;*OUTPUT oSilvCostNoSLPPbyMU(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH) without cost for shelterwood, ManagementUnit:ThemeBased
+    ;  *SOURCE oPLCostbyMU + oPTCostbyMU + oECCostbyMU  + oCTCostbyMU  + oSHCostbyMU
+    ;*OUTPUT oSilvCostNoPHbyMU(_TH2)  Cost of Silviculture (PL,EC,PT) without Including Partial Harvest Costs (SH,CT,SL,OR,SC,HC), ManagementUnit:ThemeBased
+    ;  *SOURCE oPLCostbyMU + oPTCostbyMU + oECCostbyMU
+    ;*OUTPUT oSilvCostPHbyMU(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,SL,OR,SC,HC), ManagementUnit:ThemeBased
+    ;  *SOURCE oCTCostbyMU  + oSHCostbyMU + oSLCostbyMU + oORCostbyMU + oSCCostbyMU + oHCCostbyMU
+    ;*OUTPUT oSilvCostPHNoORHCbyMU(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,SL,SC), ManagementUnit:ThemeBased
+    ;  *SOURCE oCTCostbyMU  + oSHCostbyMU + oSLCostbyMU + oSCCostbyMU
+
+    ;Aggregate Costs with Operational Adjustment Factor
+    ;*OUTPUT oSilvCostSfobyMU(_TH2)      Cost of Silviculture all Activities (PL,EC,PT,CT,SH,SL,OR,SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPLCostSfobyMU + oPTCostSfobyMU + oECCostSfobyMU +
+    ;          oCTCostSfobyMU + oSHCostSfobyMU + oSLCostSfobyMU + oORCostSfobyMU + oSCCostSfobyMU + oHCCostSfobyMU
+    ;*OUTPUT oSilvCostSfoNoORHCbyMU(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH,SL,SC) without cost for shelterwood/partial cut - final removal (OR,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPLCostSfobyMU + oPTCostSfobyMU + oECCostSfobyMU +
+    ;          oCTCostSfobyMU + oSLCostSfobyMU + oSCCostSfobyMU + oSHCostSfobyMU
+    ;*OUTPUT oSilvCostSfoNoORHCSCbyMU(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH,SL) without cost for shelterwood - final removal (OR) and Mixedwood Partial (SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPLCostSfobyMU + oPTCostSfobyMU + oECCostSfobyMU +
+    ;          oCTCostSfobyMU + oSLCostSfobyMU + oSHCostSfobyMU
+    ;*OUTPUT oSilvCostSfoNoSLPPbyMU(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH) without cost for shelterwood, ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPLCostSfobyMU + oPTCostSfobyMU + oECCostSfobyMU +
+    ;          oCTCostSfobyMU + oSHCostSfobyMU
+    ;*OUTPUT oSilvCostSfoNoPHbyMU(_TH2)  Cost of Silviculture (PL,EC,PT) without Including Partial Harvest Costs (SH,CT,SL,OR,SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oPLCostbyMUsf + oPTCostbyMUsf + oECCostbyMUsf
+    ;*OUTPUT oSilvCostSfoPHbyMU(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,SL,OR,SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oCTCostSfobyMU  + oSHCostSfobyMU + oSLCostSfobyMU + oORCostSfobyMU + oSCCostSfobyMU + oHCCostSfobyMU
+    ;*OUTPUT oSilvCostSfoPHNoORHCbyMU(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,SL,SC), ManagementUnit:ThemeBased, Operational Adjustment Factor: 27%
+    ;  *SOURCE oCTCostSfobyMU  + oSHCostSfobyMU + oSLCostSfobyMU + oSCCostSfobyMU
+
+    ;Aggregate Costs with Anualized Operational Adjustment Factor [osf,osf_mos]
+    ;*OUTPUT oSilvCostbyMUsf(_TH2)      Cost of Silviculture all Activities (PL,EC,PT,CT,SH,SL,OR,SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oPLCostbyMUsf + oPTCostbyMUsf + oECCostbyMUsf +
+    ;          oCTCostbyMUsf + oSHCostbyMUsf + oSLCostbyMUsf + oORCostbyMUsf + oSCCostbyMUsf + oHCCostbyMUsf
+    ;*OUTPUT oSilvCostNoORHCbyMUsf(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH,SL,SC) without cost for shelterwood/partial cut - final removal (OR,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oPLCostbyMUsf + oPTCostbyMUsf + oECCostbyMUsf +
+    ;          oCTCostbyMUsf + oSLCostbyMUsf + oSCCostbyMUsf + oSHCostbyMUsf
+    ;*OUTPUT oSilvCostNoORHCSCbyMUsf(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH,SL) without cost for shelterwood - final removal (OR) and Mixedwood Partial (SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oPLCostbyMUsf + oPTCostbyMUsf + oECCostbyMUsf +
+    ;          oCTCostbyMUsf + oSLCostbyMUsf + oSHCostbyMUsf
+    ;*OUTPUT oSilvCostNoSLPPbyMUsf(_TH2)  Cost of Silviculture  (PL,EC,PT,CT,SH) without cost for shelterwood, ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oPLCostbyMUsf + oPTCostbyMUsf + oECCostbyMUsf +
+    ;          oCTCostbyMUsf + oSHCostbyMUsf
+    ;*OUTPUT oSilvCostNoPHbyMUsf(_TH2)  Cost of Silviculture (PL,EC,PT) without Including Partial Harvest Costs (SH,CT,SL,OR,SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oPLCostbyMUsf + oPTCostbyMUsf + oECCostbyMUsf
+    ;*OUTPUT oSilvCostPHbyMUsf(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,SL,OR,SC,HC), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oCTCostbyMUsf  + oSHCostbyMUsf + oSLCostbyMUsf + oORCostbyMUsf + oSCCostbyMUsf + oHCCostbyMUsf
+    ;*OUTPUT oSilvCostPHNoORHCbyMUsf(_TH2)      Cost of Silviculture all Partial Harvest Activities (CT,SH,SL,SC), ManagementUnit:ThemeBased, Operational Adjustment Factor [osf,osf_mos]
+    ;  *SOURCE oCTCostbyMUsf  + oSHCostbyMUsf + oSLCostbyMUsf + oSCCostbyMUsf

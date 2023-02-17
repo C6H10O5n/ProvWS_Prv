@@ -1,0 +1,437 @@
+; Scenario: t003a_2022updates_base
+; Saved on Nov 17 2022 at 1:49:19 pm
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Initalize Dll Treatment Eligibility Parameters for HV, PL, PT, CT, SH
+;-----------------------------------------------------------------------------------------------------------------
+*Y ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+
+ ;Base Clearcut Harvest Class Parameters
+ ;10 Inputs: spbfMin%threshold,spbfMinM3,smybMin%,smybMinM3,MinHarvAgeBase,MinHarvAgeBaseBFWS,MinHarvAgePLT,MinHarvAgePCT,MinHarvAgePCTWSBF,MinHarvVolBase
+ yHCparameters _DLL(_VARIANT) #CLFMDLL getyld_sethcparameters(40,75,30,40,55,40,40,50,35,40)
+
+ ;Plantation Parameters
+ ;15 Inputs: spacingX10,ctMinAge,ctMinVol,ctRecoveryTime,CTRem1%,ctRem2%,CrnClosureClsAStocking%,B,C,D,StrataSppCodesSRSPL,SBSPL,SWPPL,SWSPL,SEXPL
+ yPLparameters _DLL(_VARIANT) #CLFMDLL getyld_setplparameters(22,25,40,20,40,40,58,70,82,90,1,1,1,1,9)
+
+ ;Precomercial Thinning Parameters
+ ;23 Inputs: pctAge,pctSpacting,pctRefAge,pctMaxSppChange,pctMinSppRetention,pctGainCharCode,pctMinCC,pctMinSC,[15 spp priorities]
+ yPTparameters _DLL(_VARIANT) #CLFMDLL getyld_setptparameters(15,22,50,50,20,15,3,4, 5,3,4,1,4,3,5,2,2,1,1,5,4,4,4)
+
+ ;Comercial Thinning Parameters
+ ;44 Inputs: ctMinVol,ctMinAge,ctMaxAge,ctMaxBfwsPct,ctOffsetTime1,ctOffsetTime2,ctRecoveryTime,ctMinPreCutVolRecoveryRatio,ctRem1,ctRem2,ctMinSppRetention,ctGainCharCode,ctMinCC,ctMinSC,[1st Entry 15 spp priorities],[2nd Entry 15 spp priorities]
+ yCTparameters _DLL(_VARIANT) #CLFMDLL getyld_setctparameters(50,25,60,50,5,10,15,80,40,40,20,14,3,4, 5,3,4,1,4,3,5,2,2,1,1,5,4,4,4, 5,3,4,1,4,3,5,2,2,1,1,5,4,4,4)
+
+ ;Selection Harvest Parameters
+ ;30 Inputs: selMinVol,selMinAge,selMaxAge,selMinTolerantPct,selMinLongLivedPct,selOffsetTime1,selOffsetTime2,selRecoveryTime,selMinPreCutVolRecoveryRatio,selRem,selMinSppRetention,selGainCharCode,selMinCC,selMinSC,sel2ndEenryTimingOptions,[15 spp priorities]
+ ySHparameters _DLL(_VARIANT) #CLFMDLL getyld_setshparameters(25,60,100,10,50,10,20,20,50,30,20,14,2,4,1, 5,3,4,1,4,3,5,2,2,1,1,5,4,4,4)
+
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Carbon Yields
+;-----------------------------------------------------------------------------------------------------------------
+*Y ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+   ;CBM pools calculated from total volume and leading species/forest community
+   yB          _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1016)
+   ;CBM DOM pools
+   yVFastAGc    _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1022)
+   yVFastBGc    _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1023)
+   yFastAGc     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1024)
+   yFastBGc     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1025)
+   yMediumc     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1026)
+   ySlowAGc     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1027)
+   ySlowBGc     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1028)
+   ySSnagc      _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1029)
+   yBSnagc      _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1030)
+
+   *YC ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+   yD           _SUM(yVFastAGc,yVFastBGc,yFastAGc,yFastBGc,yMediumc,ySSnagc,yBSnagc)
+   yS           _SUM(ySlowAGc,ySlowBGc)
+
+   ;Atmosphere Pools
+   yATMBIOc        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1032)
+   yBiocEmissions  _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1034)
+   yBiocRemovals   _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1035)
+   yATMDOMc        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1033)
+   yDOMcEmissions  _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1036)
+   yDOMcRemovals   _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,1037)
+   ;Remove first period artifact from DOM emissions
+   *YT ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+   yATMDOMmask 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+;-----------------------------------------------------------------------------------------------------------------
+;Climate Change Vulnerability based Growing Degree Days and Species Composition
+;-----------------------------------------------------------------------------------------------------------------
+*Y ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+   ;Species vulnerability RCP 2.6
+   yRSrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2001)
+   yBSrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2002)
+   yWSrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2003)
+   yBFrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2004)
+   yWPrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2005)
+   yRPrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2006)
+   yEHrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2007)
+   yTLrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2008)
+   yRMrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2009)
+   yWBrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2010)
+   yXArcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2011)
+   ySMrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2012)
+   yBErcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2013)
+   yYBrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2014)
+   yROrcp26        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2015)
+   yCCVrcp26       _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2016)
+
+   ;Species vulnerability RCP 8.5
+   yRSrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3001)
+   yBSrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3002)
+   yWSrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3003)
+   yBFrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3004)
+   yWPrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3005)
+   yRPrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3006)
+   yEHrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3007)
+   yTLrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3008)
+   yRMrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3009)
+   yWBrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3010)
+   yXArcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3011)
+   ySMrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3012)
+   yBErcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3013)
+   yYBrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3014)
+   yROrcp85        _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3015)
+   yCCVrcp85       _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3016)
+
+   ;LIT RM and WS yields
+*Y ? ? ? ? ? ? HTHw ? ? ? ? ? ? ? ?
+   yRMLITrcp26     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2009)
+   yRMLITrcp85     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3009)
+*Y AC ? ? ? ? ? LitWS ? ? ? ? ? ? ? ?
+   yWSLITrcp26     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,2003)
+   yWSLITrcp85     _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,3003)
+
+   ;Vulnerability with reduced weights for LIT species
+*YC ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+   yRSrcp26red     _MULTIPLY(yRSrcp26,0.001)
+   yWSNonLITrcp26  _SUBTRACT(yWSrcp26,yWSLITrcp26)
+   yWSLITrcp26red  _MULTIPLY(yWSLITrcp26,0.001)
+   yEHrcp26red     _MULTIPLY(yEHrcp26,0.001)
+   yWPrcp26red     _MULTIPLY(yWPrcp26,0.001)
+   yRMNonLITrcp26  _SUBTRACT(yRMrcp26,yRMLITrcp26)
+   yRMLITrcp26red  _MULTIPLY(yRMLITrcp26,0.001)
+   ySMrcp26red     _MULTIPLY(ySMrcp26,0.001)
+   yYBrcp26red     _MULTIPLY(yYBrcp26,0.001)
+   yROrcp26red     _MULTIPLY(yROrcp26,0.001)
+   yCCVrcp26temp1  _SUM(yRSrcp26red,yWSNonLITrcp26,yWSLITrcp26red,yEHrcp26red,yWPrcp26red,yRMNonLITrcp26,yRMLITrcp26red,ySMrcp26red,yYBrcp26red)
+   yCCVrcp26temp2  _SUM(yROrcp26red,yBSrcp26,yBFrcp26,yRPrcp26,yTLrcp26,yWBrcp26,yXArcp26,yBErcp26)
+   yCCVrcp26red    _SUM(yCCVrcp26temp1,yCCVrcp26temp2)
+
+   yRSrcp85red     _MULTIPLY(yRSrcp85,0.001)
+   yWSNonLITrcp85  _SUBTRACT(yWSrcp85,yWSLITrcp85)
+   yWSLITrcp85red  _MULTIPLY(yWSLITrcp85,0.001)
+   yEHrcp85red     _MULTIPLY(yEHrcp85,0.001)
+   yWPrcp85red     _MULTIPLY(yWPrcp85,0.001)
+   yRMNonLITrcp85  _SUBTRACT(yRMrcp85,yRMLITrcp85)
+   yRMLITrcp85red  _MULTIPLY(yRMLITrcp85,0.001)
+   ySMrcp85red     _MULTIPLY(ySMrcp85,0.001)
+   yYBrcp85red     _MULTIPLY(yYBrcp85,0.001)
+   yROrcp85red     _MULTIPLY(yROrcp85,0.001)
+   yCCVrcp85temp1  _SUM(yRSrcp85red,yWSNonLITrcp85,yWSLITrcp85red,yEHrcp85red,yWPrcp85red,yRMNonLITrcp85,yRMLITrcp85red,ySMrcp85red,yYBrcp85red)
+   yCCVrcp85temp2  _SUM(yROrcp85red,yBSrcp85,yBFrcp85,yRPrcp85,yTLrcp85,yWBrcp85,yXArcp85,yBErcp85)
+   yCCVrcp85red    _SUM(yCCVrcp85temp1,yCCVrcp85temp2)
+
+   ;Non-reduced, seperate LIT and non-LIT
+   yCCVLITrcp26    _SUM(yRSrcp26,yWSLITrcp26,yWPrcp26,yEHrcp26,yRMLITrcp26,ySMrcp26,yYBrcp26,yROrcp26)
+   yCCVNonLITrcp26 _SUM(yBSrcp26,yWSNonLITrcp26,yBFrcp26,yRPrcp26,yTLrcp26,yRMNonLITrcp26,yWBrcp26,yXArcp26,yBErcp26)
+   yCCVLITrcp85    _SUM(yRSrcp85,yWSLITrcp85,yWPrcp85,yEHrcp85,yRMLITrcp85,ySMrcp85,yYBrcp85,yROrcp85)
+   yCCVNonLITrcp85 _SUM(yBSrcp85,yWSNonLITrcp85,yBFrcp85,yRPrcp85,yTLrcp85,yRMNonLITrcp85,yWBrcp85,yXArcp85,yBErcp85)
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;EBM Yields
+;-----------------------------------------------------------------------------------------------------------------
+*Y ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+   yForComm    _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,41)
+   ySerCls     _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,44)
+   yDevCls     _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,45)
+   ;yCovType    _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,42)
+   ;ySerScore   _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,43)
+   ySerDevCls  _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,46)
+   yState      _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,60)
+   yAge        _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,61)
+
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Base Natural Yields
+;-----------------------------------------------------------------------------------------------------------------
+*Y ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? ?
+
+   ;Individual Species....
+   FOREACH XX IN(RS,BS,WS,BF,WP,RP,EH,TL,RM,WB,XA,SM,BE,YB,RO)
+    yXXv _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,XX.rec)
+   ENDFOR
+
+   ySv         _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,71)
+   yHv         _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,72)
+   yTv         _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,16)
+
+   ySPBFv      _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,73)
+   yPIEHTLv    _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,74)
+   ;ySMYBv      _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,75)
+   ;yIHBEROv    _DLL(_VARIANT) #CLFMDLL getyld(1.0,9,ecod,fc,cc,lc,si,fs,1,76)
+
+   yCtElig     _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,31)
+   yShElig     _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,32)
+   yHrvCls     _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,33)
+
+   ;ySp         _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,2,1)
+   ;yHp         _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,2,2)
+
+   ySVolRatSW  _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,51)
+   ySVolRatHW  _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,52)
+
+   ;yState      _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,60)
+
+   yLITv      _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,47)  ;LIT Volume
+   yLITp      _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,48)  ;LIT Volume as Percent of Total Volume
+   yLITc      _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,49)  ;LIT Class: 1=0%-5%; 2=5%-30%; 3=>30%
+
+   yEMT       _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,55,-1,-1,-1,fg,nbm,minretp)  ;Ecological Matrix Treatment Code Assignment
+   yEMTSBA    _DLL(_VARIANT) #CLFMDLL getyld(1.0,0,ecod,fc,cc,lc,si,fs,1,56)  ;Ecological Matrix Seed Beraring Age: Based on SGEM: Table 1 on Pg13
+  ;-----------------------------------------------
+  ;yEMT - Ecological Martix Treatment Codes
+  ;-----------------------------------------------
+    ;Treatment Codes: from Jamie's Flowchart Aug2020
+    ;<[n]1 modifer code to indicate plantation based strata>
+      ;  10,11: Traditional Shelterwood w/ Reserves
+      ;  20,21: Overstory Removal w/ 20% Retention
+      ;  30,31: Overstory Removal w/ 30% Retention
+      ;  40,41: Medium Retention Irregular Shelterwood
+      ;  50,51: High Retention Irregular Shelterwood
+      ;  60,61: Selection
+
+;-----------------------------------------------------------------------------------------------------------------
+;Habitat Yields
+;-----------------------------------------------------------------------------------------------------------------
+
+;PHP 2021 FSC Species Habitat Yields
+*YC ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+    yHWPerc yhv / ytv
+*YC ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+    yWarblerHwPerc     _IF(yHWPerc >= 0.3, 1, 0)
+    ychimneyHwPerc     _IF(yHWPerc >= 0.7, 1, 0)
+    yNightHawkHwPerc   _IF(yHWPerc >= 0.3, _IF(yHWPerc <= 0.7,1,0), 0)
+    ypeeweeHwPerc      _IF(yHWPerc >= 0.3, 1, 0)
+    yWhipoorwillHwPerc _IF(yHWPerc >= 0.3, 1, 0)
+    yGrossbeakHwPerc   _IF(yHWPerc >= 0.7, 1, 0)
+    yOliveMWHwPerc     _IF(yHWPerc >= 0.3, _IF(yHWPerc <= 0.7,1,0), 0)
+    yOliveSWHwPerc     _IF(yHWPerc >  0.0, _IF(yHWPerc < 0.3,1,0), 0)
+    yRustyHwPerc       _IF(yHWPerc <= 0.3, 1, 0)
+    yWoodThrushHwPerc  _IF(yHWPerc >= 0.3,1,0)
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Product Volume
+;-----------------------------------------------------------------------------------------------------------------
+*YC ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HPF
+    yPIEHTLvLog _MULTIPLY(yPIEHTLv,0)
+    yHvLog      _MULTIPLY(yHv,0)
+
+    yPIEHTLvStd _MULTIPLY(yPIEHTLv,0)
+    yHvStd      _MULTIPLY(yHv,0)
+
+    yPIEHTLvPlp _MULTIPLY(yPIEHTLv,0)
+    yHvPlp      _MULTIPLY(yHv,0)
+
+*YC ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? ?
+    ;ySPBFvLog   _MULTIPLY(ySPBFv,ySVolRatSW,0.01)
+    ;yPIEHTLvLog _MULTIPLY(yPIEHTLv,ySVolRatSW,0.01)
+    ;yHvLog      _MULTIPLY(yHv,ySVolRatHW,0.01)
+    ySPBFvLog   _MULTIPLY(ySPBFv,0.624)    ;Removed log ratio yields and use fixed percents
+    yPIEHTLvLog _MULTIPLY(yPIEHTLv,0.624)
+    yHvLog      _MULTIPLY(yHv,0.071)
+    ySvLog      _SUM(ySPBFvLog,yPIEHTLvLog)
+    yTvLog      _SUM(ySvLog,yHvLog)
+
+    ySPBFvStd   _MULTIPLY(ySPBFv,0)
+    yPIEHTLvStd _MULTIPLY(yPIEHTLv,0)
+    ySvStd      _SUM(ySPBFvStd,yPIEHTLvStd)
+    yHvStd      _MULTIPLY(yHv,0)
+    yTvStd      _SUM(ySvStd,yHvStd)
+
+    ;ySPBFvPlp   _SUBTRACT(ySPBFv,ySPBFvLog,ySPBFvStd)
+    ;yPIEHTLvPlp _SUBTRACT(yPIEHTLv,yPIEHTLvLog,yPIEHTLvStd)
+    ySPBFvPlp   _MULTIPLY(ySPBFv,0.342)    ;Removed log ratio yields and use fixed percents
+    yPIEHTLvPlp _MULTIPLY(yPIEHTLv,0.342)
+    ySvPlp      _SUM(ySPBFvPlp,yPIEHTLvPlp)
+    yHvPlp      _MULTIPLY(yHv,0.737)
+    yTvPlp      _SUM(ySvPlp,yHvPlp)
+
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Mean Anual Increment
+;-----------------------------------------------------------------------------------------------------------------
+*YC ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? ?
+    ySMAI _MAI(ySv, 5)
+    yHMAI _MAI(yHv, 5)
+    yTMAI _MAI(yTv, 5)
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Silviculture Costs
+;-----------------------------------------------------------------------------------------------------------------
+*YT ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? ?
+    ysBudgetM3 0 3.00
+    yhBudgetM3 0 0.60
+    
+    ysBudgetGMT 0 3.49
+    yhBudgetGMT 0 0.58 
+
+    
+    yPLCostHa   0 1300   ;increase in plantation cost to 1300 - X
+    yPIHCostHa 0 1156   ;PIH: Industrial Managed Plantation: - 175(Siteprep@175) + 650(Planting@650) + 0(0% Filled Planted@300) + 100(Areial Herbicide@100)    +  0(0%Ground Herbicide@250)  + 160(40%Weeded@400)  + 120(30%NeedPlantationPCT@400)
+    yPBHCostHa 0 1273   ;PBH: Base Managed With Herbicide:   - 175(Siteprep@175) + 650(Planting@650) + 0(0% Filled Planted@300) +  65(65%Areial Herbicide@100) + 25(10%Ground Herbicide@250) + 72(18%Weeded@400)   + 260(65%NeedPlantationPCT@400)
+    yPNHCostHa 0 1688   ;PNH: Base Managed Without Herbicid: - 175(Siteprep@175) + 650(Planting@650) + 0(0% Filled Planted@300) +  00(Areial Herbicide@100)    + 0(0%Ground Herbicide@250)   + 480(120%Weeded@400) + 696(87%NeedPlantationPCT@800)
+    ;yPLCostHa   0 1140   ;600(Establishment) + 300(EarlyCompetitionControl) + 225(50%NeedPlantationPCT) + 15(10%IntensivePLT)
+    yPTNRCostHa     0  800
+    
+    yPTCostHa   0  800
+    yCTCostHa   0  550
+    yBHCostHa   0  550
+    ySLCostHa   0  550
+    ySCCostHa   0  550
+    ySHCostHa   0  550
+    yECCostHa   0  400
+    yORCostHa   0  0
+    yHCCostHa   0  0
+    
+    
+    
+    yPLxCostHa 0 2360  ;High Productuion Forestry Estimate: Aggregate
+    yPLsCostHa 0  285   ;High Productuion Forestry Estimate: site prep
+    yPLpCostHa 0  900   ;High Productuion Forestry Estimate: plant
+    yPLhCostHa 0  600   ;High Productuion Forestry Estimate: herbicide
+    yPLwCostHa 0  425   ;High Productuion Forestry Estimate: weeding
+    yPLaCostHa 0  150   ;High Productuion Forestry Estimate: soil amendments
+
+    yPLmCostHa 0 1824   ;PNH: Base Managed Without Herbicid: 
+                          ;- 175(Siteprep@175)         + 650(Planting@650)            + 0(0% Filled Planted@300) 
+                          ;+  00(Areial Herbicide@100) + 0(0%Ground Herbicide@250)   
+                          ;+ 480(120%Weeded@400)       + 696(87%NeedPlantationPCT@800)
+                          ;Change from SFA Base:  +138(17% failures get a PCT@800 to come out of regime with the pct)
+
+    yPTNRCostHa     0  800
+    yPTVR10CostHa   0  800
+    yPTVR20CostHa   0  800
+    yPTVR30CostHa   0  800
+    yPTIS50CostHa   0  800
+    yPTIS70CostHa   0  800
+
+    yCTCostHa   0  550
+    ySHCostHa   0  550
+    yIS70CostHa 0  550
+    yIS50CostHa 0  550
+    ySLCostHa   0  550
+    yVR30CostHa 0  0
+    yVR20CostHa 0  0
+    yVR10CostHa 0   0
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;PNV MADR's
+;-----------------------------------------------------------------------------------------------------------------
+;    yMadrL 0 0.0009
+;    yMadrH 0 0.0028
+;*YT ? ? AAFP ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrM 0 0.0014
+;*YT ? ? AASP ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0075
+;    yMadrL 0 0.0369
+;    yMadrM 0 0.0086
+;*YT ? ? AASP ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0075
+;    yMadrL 0 0.0369
+;    yMadrM 0 0.0086
+;*YT ? ? AAWC ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0075
+;    yMadrL 0 0.0299
+;    yMadrM 0 0.0068
+;*YT ? ? AZTH ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0028
+;    yMadrL 0 0.0249
+;    yMadrM 0 0.0049
+;*YT ? ? AZTM ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0053
+;    yMadrL 0 0.0399
+;    yMadrM 0 0.0088
+;*YT ? ? AZTS ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0061
+;    yMadrL 0 0.0249
+;    yMadrM 0 0.0034
+;*YT ? ? MZCS ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0116
+;    yMadrL 0 0.0719
+;    yMadrM 0 0.0217
+;*YT ? ? MZCH ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0028
+;    yMadrL 0 0.0719
+;    yMadrM 0 0.0168
+;*YT ? ? MZHF ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0210
+;    yMadrL 0 0.0119
+;    yMadrM 0 0.0036
+;*YT ? ? MAWC ? ? ? ? ? ? ? ? ? ? ? ?
+;    yMadrH 0 0.0075
+;    yMadrL 0 0.0039
+;    yMadrM 0 0.0009
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Discount Curves
+;-----------------------------------------------------------------------------------------------------------------
+*YT ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+    ;Discount Percent Calculated as [=1/(1+Disc%)^Yrs]
+    yDF4%  0 1 0.82193 0.67556 0.55526 0.45639 0.37512 0.30832 0.25342 0.20829 0.1712 0.14071 0.11566 0.09506 0.07813 0.06422 0.05278 0.04338 0.03566 0.02931 0.02409
+    yDF10% 0 1 0.6209  0.3855  0.2394  0.1486  0.0923  0.0573  0.0356  0.0221  0.0137 0.0085  0.0053  0.0033  0.0020  0.0013  0.0008  0.0005  0.0003  0.0002  0.0001
+    yDF50  0 1 1 1 1 1 1 1 1 1 1 1 0 ;Discount to 0 After 50 Years
+    yPER1  0 1 1 0 ;Discount to 0 After Period1
+    y100   0 100
+
+
+;-----------------------------------------------------------------------------------------------------------------
+;Constant Number Curves
+;-----------------------------------------------------------------------------------------------------------------
+  ;Area in a High Production Forestry Prescription
+  ;*YT ? CRNAll ? ? wMoose ? ? ? ? ? WLB WLB ? ? HF
+  ;  ySFosfoper 0 #osfoper_hf_mos
+  ;  ySFosf     0 #osf_hf_mos
+  ;  ySFosfst   0 #osfst_hf_mos
+  ;  ySFosfht   0 #osfht_hf_mos
+  *YT ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX ;Transitional hfx oper adjustment factor
+    ySFosfst   0 #osfst_hfx ;volume adjustment for initial harvest of stands going into HPF
+    ySFosfht   0 #osfht_hfx ; -it is half of the em adjusttment to remove spatial arrangement factor
+  *YT ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HF
+    ySFosfoper 0 #osfoper_hf
+    ySFosf     0 #osf_hf
+    ySFosfst   0 #osfst_hf
+    ySFosfht   0 #osfht_hf 
+  ;Everything Else: Ecological Matrix Zone  -OR-  Area HPF Zone area not yet put on a HPF Prescription
+  *YT ? CRNAll ? ? wMoose ? ? ? ? ? WLB WLB ? ? ?
+    ySFosfoper 0 #osfoper_em_mos
+    ySFosf     0 #osf_em_mos
+    ySFosfst   0 #osfst_em_mos
+    ySFosfht   0 #osfht_em_mos
+  *YT ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? ?
+    ySFosfoper      0 #osfoper_em
+    ySFosf          0 #osf_em
+    ySFosfst        0 #osfst_em
+    ySFosfht        0 #osfht_em
+    ySFosfoperNoMos 0 #osfoper_em
+    ySFosfNoMos     0 #osf_em
+    ySFosfstNoMos   0 #osfst_em
+    ySFosfhtNoMos   0 #osfht_em
+  *YT ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? ?
+    ysM3toGmt  0 #ost
+    yhM3toGmt  0 #oht 
+

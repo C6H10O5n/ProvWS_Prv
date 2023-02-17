@@ -1,0 +1,29 @@
+;-;CONTROL
+{==================================================================}
+{                          /\     Nova Scotia                      }
+{                         /  \    Department of Natural Resources  }
+{                        /    \   Forestry Division                }
+{ Tel:   (902)-893-5696 /______\  Forest Management Planning       }
+{ Fax:   (902)-893-6102    |      Resource Modeling Section        }
+{==================================================================}
+{ Project     : Crown Lands Strategic Forest Model                 }
+{==================================================================}
+
+;CONTROL SECTION
+ *LENGTH 20
+ *SCHEDULE ON ;1..2 ;ON
+ *IMAGE OFF
+ *WARNINGS OFF
+ *GRAPHICS ON
+ *REPORTS ON
+ *BUILD OFF
+ *PAUSEWHENDONE OFF
+ *DEBUG OFF
+ *OPTIMIZE OFF
+ *QUEUE OFF
+ *LPSCHEDULE OFF
+ *COMPRESSTIME 6 6
+ *USECATEGORIES ON
+ *NEGVOL  1000
+ *AACONTROL OFF ;ON, 20%
+ *CACHEDLLCALLS OFF

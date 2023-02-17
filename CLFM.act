@@ -1,0 +1,140 @@
+{==================================================================}
+{                          /\     Nova Scotia                      }
+{                         /  \    Department of Natural Resources  }
+{                        /    \   Forestry Division                }
+{ Tel:   (902)-893-5696 /______\  Forest Management Planning       }
+{ Fax:   (902)-893-6102    |      Resource Modeling Section        }
+{==================================================================}
+{ Project     : Crown Lands Strategic Forest Model                 }
+{==================================================================}
+
+
+;Precommercial Thinning in Natural Stands
+*ACTION aPT   N  "Precommercial Thinning"
+  *OPERABLE aPT _CP 1..3
+   ? ? ? ? canHrv ? ? CD 4567 NRG WLB WLB ? ? ?  _AGE >= 2 and _AGE <= 3
+  *OPERABLE aPT _CP 4..9
+   ? ? ? ? canHrv ? ? CD 4567 NRG WLB WLB ? ? ?  _AGE = 3
+  *OPERABLE aPT _CP 10.._LENGTH
+   ? ? ? ? canHrv ? ? CD 4567 NRG WLB WLB ? ? EM  _AGE = 3
+
+;Clearcut based harvest/silviculture Systems
+;-------------------------------------------
+;Clearcut and Leave for Natural
+*ACTION aCC Y "Clear-Cut Harvest & Leave For Natural"
+ *OPERABLE aCC _CP 1..4
+    ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX _AGE >= 6 and yTv >= 1
+	? ? ? ? canHrv ? ? ? ? FTGminusSEL WLB WLB ? ? ?   yHrvCls >=  1
+ *OPERABLE aCC _CP 5..9
+    ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX _AGE >= 6 and yTv >= 1
+    ? ? ? ? canHrv ? ? ? ? FTGminusSEL WLB WLB ? ? ?   yHrvCls >= 10
+ *OPERABLE aCC _CP 10.._LENGTH
+    ? ? ? ? canHrv ? ? ? ? FTGminusSEL WLB WLB ? ? EM   yHrvCls >= 10	
+
+;Clearcut with Early Competition Control Treatment
+*ACTION aEC Y "Early Competition Control"
+  *OPERABLE aEC _CP 1.._LENGTH
+   ? ? ? ? canHrv ? SWD ? 567 DEL WLB WLB ? ? EM  _AGE = 0
+
+;Plantation
+*ACTION aPLrSPIH Y   "Red Spruce Plantation - Industrial Herbicide Scenario (PIH)"
+  *OPERABLE aPLrSPIH _CP 1.._LENGTH
+   ? ? ? ? canHrv ? ? ? 567 DEL WLB WLB ? ? EM  _AGE = 0
+*ACTION aPLrSPBH Y   "Red Spruce Plantation - Non-Industrial Herbicide Scenario (PBH)"
+  *OPERABLE aPLrSPBH _CP 1.._LENGTH
+   ? ? ? ? canHrv ? ? ? 567 DEL WLB WLB ? ? EM  _AGE = 0
+*ACTION aPLrSPNH Y   "Red Spruce Plantation - Non-Industrial Non-Herbicide Scenario (PNH)"
+  *OPERABLE aPLrSPNH _CP 1.._LENGTH
+   ? ? ? ? canHrv ? ? ? 567 DEL WLB WLB ? ? EM  _AGE = 0
+
+
+;Partial Harvest / Silviculture Systems
+;-------------------------------------------
+;Commercial Thinning
+*ACTION aCT N  ;_LOCKEXEMPT "Commercial Thinning in Natural Regeneration"
+  *OPERABLE aCT _CP 1..9
+  ?  ? ? ? ? ? ? ? ? PLXPCT WLB WLB ? ? ?  yCtElig >= 10 and yCtElig <= 30
+  *OPERABLE aCT _CP 10.._LENGTH
+  ?  ? ? ? ? ? ? ? ? PLXPCT WLB WLB ? ? EM  yCtElig >= 10 and yCtElig <= 30
+  
+
+  *PARTIAL aCT
+   ySv yHv
+   ySPBFv yPIEHTLv ;ySMYBv yIHBEROv
+
+;Shelterwood Harvest (see regime section for details)
+*REGIME rSL
+*ACTION aSL N "Shelterwood Harvest (Regime)"
+  *PARTIAL aSL _SAMEAS aCT  
+;Shelterwood Harvest - Overstory REmoval
+*ACTION aOR Y "Overstory Removal Harvest (Regime)"
+ *OPERABLE aOR _CP 1..4
+    ? ? ? ? canHrv ? ? ? ? SHL WLB WLB ? ? EM  yTv >= 0
+
+;Mixedwood Partial Cut harvest
+*REGIME rPP
+*ACTION aSC N "Mixedwood Partial Cut 1st Pass (Regime)"
+   *PARTIAL aSC _SAMEAS aCT
+;Mixedwood Partial Cut 2nd entry  not sure if this will reset age or not or is classified as or
+*ACTION aHC Y "Mixedwood Partial Cut 2nd Pass (Regime)"
+
+
+;Selection Harvest
+*ACTION aSHi N "Selection Harvest - Initial Entry"
+  *OPERABLE aSHi _CP 1.._LENGTH
+  ? ? ? ? ? ? ? ? ? FTGminusSELSHL WLB WLB ? ? EM   yShElig >= 10 and yShElig <= 30 and yEMT >= 50
+  *PARTIAL aSHi  _SAMEAS aCT
+*ACTION aSHr Y "Selection Harvest - Secondary Entries"
+  *OPERABLE aSHr _CP 1.._LENGTH
+  ? ? ? ? ? ? ? ? ? SHX WLB WLB ? ? EM   yShElig >= 1 and yShElig <= 30 and yEMT >= 50
+  *PARTIAL aSHr  _SAMEAS aCT
+
+;All Selection Harvest Action
+*AGGREGATE aSH
+  aSHi aSHr
+
+;All Plantation Actions
+*AGGREGATE aPL
+  aPLrSPIH aPLrSPBH aPLrSPNH
+
+;All Partial Harvest Actions
+*AGGREGATE aPH
+  aCT aSHi aSHr aSL aOR aSC aHC
+  rSL rPP
+*AGGREGATE aPH2
+  aCT aSHi aSHr aSC
+
+;All Harvest Actions
+*AGGREGATE aHV
+  aCC
+  aCT aSHi aSHr aSL aOR aSC aHC
+  rSL rPP
+
+;All Actions
+*AGGREGATE aTR
+  aPLrSPIH aPLrSPBH aPLrSPNH
+  aPT
+  aEC
+  aCC
+  aCT aSHi aSHr aSL aOR aSC aHC
+  rSL rPP
+  
+  
+;High Production Forestry Regime
+*ACTION aHFremove N "Moves Suitable Suitable HPF Area to the EM"
+  *OPERABLE aHFremove _CP 1..1
+    ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX  _age >= 1
+*ACTION aHFregen Y "Option to Convert Regen in 1-5yr  Ageclass and 1/2 regen in the 6-10yr Ageclass to HPF"
+  *OPERABLE aHFregen _CP 1..1
+    ? ? ? ? ? ? ? ? ? ? WLB WLB ? ? HFX  _age = 1 or _age = 2
+*REGIME rHF
+  *ACTION aPLs  N "Plantation Site Prep (Regime)"
+  *ACTION aPLrs N "Plantation Plant Red Spruce (Regime)"
+  *ACTION aPLws N "Plantation Plant White Spruce (Regime)"
+  *ACTION aPLns N "Plantation Plant Norway Spruce (Regime)"
+  *ACTION aPLh  N "Plantation Herbicide (Regime)"
+  *ACTION aPLw  N "Plantation Weeding (Regime)"
+  *ACTION aPLa  N "Plantation Soil Admendents (Regime)"
+  *ACTION aPLct N "Plantation Commercial Thinning(Regime)"
+    *PARTIAL aPLct _SAMEAS aCT
+  *ACTION aPLcc Y "Plantation Clearcut Harvest (Regime)"

@@ -1,0 +1,510 @@
+;-;REPORTS
+{==================================================================}
+{                          /\     Nova Scotia                      }
+{                         /  \    Department of Natural Resources  }
+{                        /    \   Forestry Division                }
+{ Tel:   (902)-893-5696 /______\  Forest Management Planning       }
+{ Fax:   (902)-893-6102    |      Resource Modeling Section        }
+{==================================================================}
+{ Project     : Crown Lands Strategic Forest Model                 }
+{==================================================================}
+
+
+;Misc Woodstock Reports <GROUP>
+;-----------------------------------------------------------------------
+  ;*TARGET MyOperability.dbf
+  ;  _OPERABLE(rHF) 1..1
+
+  ;*TARGET MyConditionReport.dbf
+    ;_CONDITION 1.._length
+    ;_PERUNITAERA
+    ;oHpfOnRxRSByMu
+    ;oHpfOnRxWSByMu 
+    ;oHpfOnRxNSByMu
+
+  ;*TARGET MyTraceReport.dbf
+  ;  _TRACE 1.._LENGTH
+  
+  ;*TARGET Activity.dbf
+  ;  _ACTIVITY 1.._LENGTH
+  ;  _TOTAL
+  ;    oacHVvHbyMUsf
+  ;    oacHVvSbyMUsf
+  ;    oacHVvSPBFbyMUsf
+  ;    oacHVvPIEHTLbyMUsf
+
+
+
+;<ENDGROUP> Misc Woodstock Reports
+
+
+;Main CLFM Graphics Template (used by _CLFM_WoodstockGraphics.exe) <GROUP>
+;-----------------------------------------------------------------------
+*Target clfmGraphics.csv
+
+  ;Harvest Outputs <GROUP>
+  ;-------------------------------------------------
+  Foreach XX in (PRVALL,#opMUs)
+    FOREACH YY IN (NULL,tEM,tHF)
+
+      ;Total (Merchantable Bole) Operable Inventory by Species Group (gmt)[XX]
+      ogsvSbyMU.IF(YY=NULL,,YY)(XX)             0.._LENGTH
+      ogsvHbyMU.IF(YY=NULL,,YY)(XX)             0.._LENGTH
+      ogsvSbyMU.IF(YY=NULL,,YY)gmt(XX)          0.._LENGTH
+      ogsvHbyMU.IF(YY=NULL,,YY)gmt(XX)          0.._LENGTH
+
+      ;20-yrAgeclass Distribution by Management Status (ha)[XX]
+      FOREACH ZZ IN (#TH10Rep, ALL)
+        ohaFHbyMUstZZag20.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZag40.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZag60.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZag80.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZag100.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZag100p.IF(YY=NULL,,YY)(XX)  0.._LENGTH
+      ENDFOR
+
+      ;10-yrAgeclass Distribution by Management Status (ha)[XX]
+      FOREACH ZZ IN (#TH10Rep, ALL)
+        ohaFHbyMUstZZagx10.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx20.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx30.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx40.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx50.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx60.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx70.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx80.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx90.IF(YY=NULL,,YY)(XX)    0.._LENGTH
+        ohaFHbyMUstZZagx100.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx110.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx120.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx130.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx140.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx150.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx160.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx170.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx180.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx190.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx200.IF(YY=NULL,,YY)(XX)   0.._LENGTH
+        ohaFHbyMUstZZagx200p.IF(YY=NULL,,YY)(XX)  0.._LENGTH
+      ENDFOR
+
+      ;Working Forest Area by Management Status (ha)[XX]
+      ohaFHbyMU.IF(YY=NULL,,YY)(XX)             0.._LENGTH
+      ohaFHbyMUstNAU.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohaFHbyMUstNAE.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohaFHbyMUstNRX.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohaFHbyMUstPLX.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohaFHbyMUstPCT.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohaFHbyMUstCTX.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohaFHbyMUstSHX.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohaFHbyMUstESC.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+
+      ;Hardwood (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]
+      oacHVvHbyMU.IF(YY=NULL,,YY)sf(XX)         0.._LENGTH
+      oacCCvHbyMU.IF(YY=NULL,,YY)sf(XX)         0.._LENGTH
+      oacVRvHbyMU.IF(YY=NULL,,YY)sf(XX)         0.._LENGTH
+      oacISvHbyMU.IF(YY=NULL,,YY)sf(XX)         0.._LENGTH
+      oacSLvHbyMU.IF(YY=NULL,,YY)sf(XX)         0.._LENGTH
+      oacCTvHbyMU.IF(YY=NULL,,YY)sf(XX)         0.._LENGTH
+      oacSHvHbyMU.IF(YY=NULL,,YY)sf(XX)         0.._LENGTH
+	  oacORvHbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacSCvHbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacHCvHbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+
+      ;Softwood (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]
+      oacHVvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacCCvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacVRvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacISvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacSLvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacCTvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacSHvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacORvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacSCvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacHCvSbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      
+
+      ;Spruce-Fir (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]
+      oacHVvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacCCvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacVRvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacISvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacSLvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacCTvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacSHvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+	  oacORvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacSCvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oacHCvSPBFbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+
+      ;Spruce-Fir Harvest by Management Status (gmt/year)[XX]
+      oacHVvSPBFbyMUstNAU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oacHVvSPBFbyMUstNAE.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oacHVvSPBFbyMUstNRX.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oacHVvSPBFbyMUstPLX.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oacHVvSPBFbyMUstPCT.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oacHVvSPBFbyMUstCTX.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oacHVvSPBFbyMUstSHX.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+
+      ;Area Treated by Management Activity (ha/year)[XX]
+      ohvacPLsHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacPLpHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacPLhHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacPLwHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacPLaHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacPLmHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+
+      ohvacPTHabyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
+      ohvacPTNRHabyMU.IF(YY=NULL,,YY)sf(XX)   0.._LENGTH
+      ohvacPTVR10HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
+      ohvacPTVR20HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
+      ohvacPTVR30HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
+      ohvacPTIS50HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
+      ohvacPTIS70HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
+
+      ohvacHVHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacCCHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacVRHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacISHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacSLHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacCTHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacSHHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacORHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacHCHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      ohvacSCHabyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      
+
+      ohvacVR10HabyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      ohvacVR20HabyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      ohvacVR30HabyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      ohvacIS50HabyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      ohvacIS70HabyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+
+      ;Silvicultural Costs by Management Activity ($/year)[XX]
+      oPLsCostbyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
+      oPLpCostbyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
+      oPLhCostbyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
+      oPLwCostbyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
+      oPLaCostbyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
+      oPLmCostbyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
+
+      oPTNRCostbyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      oPTVR10CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oPTVR20CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oPTVR30CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oPTIS50CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+      oPTIS70CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
+
+      oSLCostbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oCTCostbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+      oSHCostbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
+
+      oVR10CostbyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      oVR20CostbyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      oVR30CostbyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      oIS50CostbyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      oIS70CostbyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+
+      
+      ;Average Harvest Stats [XX]
+      ohAvAgeacHVbyMU.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohAvTVolacHVbyMU.IF(YY=NULL,,YY)(XX)       0.._LENGTH
+      ohAvTMAIacHVbyMU.IF(YY=NULL,,YY)(XX)       0.._LENGTH
+      ohAvTQMDacHVbyMU.IF(YY=NULL,,YY)(XX)       0.._LENGTH
+      ohAvAgeacCCbyMU.IF(YY=NULL,,YY)(XX)        0.._LENGTH
+      ohAvTVolacCCbyMU.IF(YY=NULL,,YY)(XX)       0.._LENGTH
+      ohAvTMAIacCCbyMU.IF(YY=NULL,,YY)(XX)       0.._LENGTH
+      ohAvTQMDacCCbyMU.IF(YY=NULL,,YY)(XX)       0.._LENGTH
+
+      ;Average Clearcut Harvest MAI by Management Status (m³/ha/yr)[XX]
+      ohAvTMAIacCCbyMUstNAU.IF(YY=NULL,,YY)(XX) 0.._LENGTH
+      ohAvTMAIacCCbyMUstNAE.IF(YY=NULL,,YY)(XX) 0.._LENGTH
+      ohAvTMAIacCCbyMUstNRG.IF(YY=NULL,,YY)(XX) 0.._LENGTH
+      ohAvTMAIacCCbyMUstPCT.IF(YY=NULL,,YY)(XX) 0.._LENGTH
+      ohAvTMAIacCCbyMUstPLX.IF(YY=NULL,,YY)(XX) 0.._LENGTH
+      ohAvTMAIacCCbyMUstCTX.IF(YY=NULL,,YY)(XX) 0.._LENGTH
+    ENDFOR
+  ENDFOR
+  ;<ENDGROUP> Harvest Outputs
+
+  ;HPF Outputs <GROUP>
+  ;-------------------------------------------------
+  FOREACH XX in (PRVALL,#opMUs)
+    ;Prescription By Species
+    oHpfOnRxRsByMu(XX)      0.._LENGTH
+    oHpfOnRxWsByMu(XX)      0.._LENGTH
+    oHpfOnRxNsByMu(XX)      0.._LENGTH
+    oHpfOnRxAllByMu(XX)     0.._LENGTH
+  
+    oHpfOnRxRsByMusf(XX)      0.._LENGTH
+    oHpfOnRxWsByMusf(XX)      0.._LENGTH
+    oHpfOnRxNsByMusf(XX)      0.._LENGTH
+    oHpfOnRxAllByMusf(XX)     0.._LENGTH
+  
+    ;Prescription By Target Diameter Size
+    oHpfOnRxPz08ByMusf(XX)      0.._LENGTH
+    oHpfOnRxPz10ByMusf(XX)      0.._LENGTH
+    oHpfOnRxPz12ByMusf(XX)      0.._LENGTH
+  
+  
+    ;SpruceFir harvest by Harvest System
+    ;[defined above]:oacCCvSPBFbyMUtHFsf(XX)   0.._LENGTH
+    ;[defined above]:oacCTvSPBFbyMUtHFsf(XX)   0.._LENGTH
+  
+    ;Prescription Started By Species
+    oHpfIniRxRsByMu(XX)     0.._LENGTH
+    oHpfIniRxWsByMu(XX)     0.._LENGTH
+    oHpfIniRxNsByMu(XX)     0.._LENGTH
+    oHpfIniRxAllByMu(XX)    0.._LENGTH
+  
+    oHpfIniRxRsByMusf(XX)     0.._LENGTH
+    oHpfIniRxWsByMusf(XX)     0.._LENGTH
+    oHpfIniRxNsByMusf(XX)     0.._LENGTH
+    oHpfIniRxAllByMusf(XX)    0.._LENGTH
+  
+  
+    ;Prescription Started By Ranking class
+    FOREACH YY IN (1,2,3)
+      oHpfIniRxRkYYByMusf(XX)     0.._LENGTH
+    ENDFOR
+  
+  
+    ;Harvest By Product
+    FOREACH YY IN (LOG,STD,PLP)
+      oacHVvSPBFprYYbyMUtHFsf(XX)  0.._LENGTH
+    ENDFOR
+  
+    ;RxTransition
+    ;ohaFHbyMU(XX)              0.._LENGTH
+    ;ohaFHbyMUtEM(XX)           0.._LENGTH
+    ;ohaFHbyMUtHF(XX)           0.._LENGTH
+    ;[defined above]:oHpfOnRxAllByMu(XX)       0.._LENGTH
+  ENDFOR
+  ;<ENDGROUP> HPF Outputs
+ 
+  ;EM Outputs <GROUP>
+  ;-------------------------------------------------
+  ;FOREACH XX IN (CRNALL,PRVALL,MUALL,#opMUs)
+  ;  FOREACH YY IN (NULL,tEM,tHF)
+  ;
+  ;    ;Ecological Matrix Treatment Class
+  ;    FOREACH ZZ IN (10,11,20,21,30,31,40,41,50,51,60,61)
+  ;      ohaFHbyMUemtZZ.IF(YY=NULL,,YY)(XX)  0.._LENGTH
+  ;    ENDFOR
+  ;
+  ;    ;Ecological Matrix LIT Class
+  ;    FOREACH ZZ IN (10..100,10)
+  ;      ohaFHbyMUlitZZ.IF(YY=NULL,,YY)(XX)  0.._LENGTH
+  ;    ENDFOR
+  ;
+  ;  ENDFOR
+  ;ENDFOR
+  ;<ENDGROUP> EM Outputs
+
+  ;Wildlife Outputs <GROUP>
+  ;-------------------------------------------------
+  FOREACH XX IN (EM,HF,NULL) ;Triad
+    FOREACH YY IN (NDRALL,#opEUs)
+      FOREACH ZZ IN (YY,#opYYEUs)
+        FOREACH KK IN (FLB,WLB,RLB)
+          
+          ;Moose
+          oMooseHaKKCrnSwd.IF(XX=NULL,,tXX)(ZZ)     0.._LENGTH
+          oMooseHaKKCrnMatSwd.IF(XX=NULL,,tXX)(ZZ)  0.._LENGTH
+
+          ;Deer                                     
+          oDeerHaKKCrnSwd.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oDeerHaKKCrnMatSwd.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          
+          ;PHP Species Habitat Indicators
+          oHabPilPeckerKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oHabBarredOwlKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oHabBickThrushKK.IF(XX=NULL,,tXX)(ZZ)     0.._LENGTH
+          oHabBBPeckerKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oHabWWCrossKK.IF(XX=NULL,,tXX)(ZZ)        0.._LENGTH                                                
+          oWarblerKK.IF(XX=NULL,,tXX)(ZZ)           0.._LENGTH
+          oChimneySwiftKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oNightHawkKK.IF(XX=NULL,,tXX)(ZZ)         0.._LENGTH
+          oPeeweeHabKK.IF(XX=NULL,,tXX)(ZZ)         0.._LENGTH
+          oWhippoorwillHabKK.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oGrossbeakHabKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oOliveHabKK.IF(XX=NULL,,tXX)(ZZ)          0.._LENGTH
+          oRustyBlackBirdHabKK.IF(XX=NULL,,tXX)(ZZ) 0.._LENGTH
+          oWoodThrushHabKK.IF(XX=NULL,,tXX)(ZZ)     0.._LENGTH  
+      
+        ENDFOR
+      ENDFOR
+    ENDFOR
+  ENDFOR
+  ;<ENDGROUP> EM Outputs
+
+  ;EBM Outputs <GROUP>
+  ;-------------------------------------------------
+  FOREACH XX IN (EM,HF,NULL) ;Triad
+    FOREACH YY IN (NDRALL,#opEUs)
+      FOREACH ZZ IN (YY,#opYYEUs)
+
+        FOREACH KK IN (FLB,WLB,RLB)
+          oELChaKK.IF(XX=NULL,,tXX)(ZZ)
+
+          oELChaKKagx10.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx20.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx30.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx40.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx50.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx60.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx70.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx80.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx90.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oELChaKKagx100.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx110.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx120.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx130.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx140.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx150.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx160.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx170.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx180.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx190.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx200.IF(XX=NULL,,tXX)(ZZ)   0.._LENGTH
+          oELChaKKagx200p.IF(XX=NULL,,tXX)(ZZ)  0.._LENGTH
+
+          FOREACH JJ IN (#TH10Rep)
+            oELChaKKstJJ.IF(XX=NULL,,tXX)(ZZ)  0.._LENGTH
+          ENDFOR
+
+          oEstKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oYngKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oMatKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oOldKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oMt1KK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oMt2KK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oMtoKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oEsyKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oMtoPKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oOldPKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oEsyPKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+
+          oEarKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oMidKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oLatKK.IF(XX=NULL,,tXX)(ZZ)       0.._LENGTH
+          oLatPKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+
+          oHIHwKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oHITHwKK.IF(XX=NULL,,tXX)(ZZ)     0.._LENGTH
+          oHTHwKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oMIHwHSKK.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oMIHwSHKK.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oMTHwKK.IF(XX=NULL,,tXX)(ZZ)      0.._LENGTH
+          oSrSbSDomKK.IF(XX=NULL,,tXX)(ZZ)  0.._LENGTH
+          oSwSDomKK.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oSbFDomKK.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oSSpbFDomKK.IF(XX=NULL,,tXX)(ZZ)  0.._LENGTH
+          oSPiDomKK.IF(XX=NULL,,tXX)(ZZ)    0.._LENGTH
+          oSMHePiSpKK.IF(XX=NULL,,tXX)(ZZ)  0.._LENGTH
+        ENDFOR
+
+        FOREACH KK IN (#acHVgr2,acHV)
+          ohvKKHabyEU.IF(XX=NULL,,tXX)sf(ZZ)  0.._LENGTH
+        ENDFOR
+
+        FOREACH KK IN(SPBF,S,H)
+          oacHVvKKbyEU.IF(XX=NULL,,tXX)sf(ZZ) 0.._LENGTH
+        ENDFOR
+
+      ENDFOR
+    ENDFOR
+  ENDFOR
+  ;<ENDGROUP> EBM Outputs
+
+  ;Carbon Outputs <GROUP>
+  ;Foreach XX in (EM,HF,NULL)
+  ;  FOREACH YY IN (CRNALL,PRVALL,MUALL,#opMUs)
+  ;
+  ;    ;Carbon Forest by Landbase
+  ;    FOREACH ZZ IN(WLB,RLB,NULL)
+  ;      oBioc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+  ;      oDOMNoSoilc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY) 0.._LENGTH
+  ;      oSoilc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)      0.._LENGTH
+  ;      oForc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+  ;      oATMBioc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+  ;      oATMDOMc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+  ;      oATMSoilc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)   0.._LENGTH
+  ;      oATMForc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+  ;    ENDFOR
+  ;    
+  ;    ;Carbon Harvested Wood Products
+  ;    oSolidSWcByMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+  ;    oSolidHWcByMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+  ;    oPulpSWcbyMU.IF(XX=NULL,,tXX)(YY)        0.._LENGTH
+  ;    oPulpHWcbyMU.IF(XX=NULL,,tXX)(YY)        0.._LENGTH
+  ;    oBiomassSWcbyMU.IF(XX=NULL,,tXX)(YY)     0.._LENGTH
+  ;    oBiomassHWcbyMU.IF(XX=NULL,,tXX)(YY)     0.._LENGTH
+  ;    oTotalHWPcbyMU.IF(XX=NULL,,tXX)(YY)      0.._LENGTH
+  ;    oCulmSolidSWcByMU.IF(XX=NULL,,tXX)(YY)   0.._LENGTH
+  ;    oCulmSolidHWcByMU.IF(XX=NULL,,tXX)(YY)   0.._LENGTH
+  ;    oCulmPulpSWcByMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+  ;    oCulmPulpHWcByMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+  ;    oCulmHWPcByMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+  ;    
+  ;    ;Carbon Atmosphere
+  ;    oATMBiocbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+  ;    oATMDOMcbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+  ;    oATMSoilcbyMU.IF(XX=NULL,,tXX)(YY)       1.._LENGTH
+  ;    oATMForcbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+  ;    oATMHWPcbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+  ;    oATMTotalcbyMU.IF(XX=NULL,,tXX)(YY)      1.._LENGTH
+  ;
+  ;  ENDFOR
+  ;ENDFOR
+
+
+  ;<ENDGROUP> Carbon Outputs
+
+
+;<ENDGROUP> clfmGraphics.csv
+
+
+;Carbon Export Data <GROUP>
+;-----------------------------------------------------------------------
+;*TARGET Carbon.dbf
+;  Foreach XX in (EM,HF,NULL)
+;    FOREACH YY IN (CRNALL,PRVALL,MUALL,#opMUs)
+;
+;      ;Carbon Forest by Landbase
+;      FOREACH ZZ IN(WLB,RLB,NULL)
+;        oBioc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+;        oDOMNoSoil.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)  0.._LENGTH
+;        oSoilc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)      0.._LENGTH
+;        oForc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+;        oATMBioc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+;        oATMDOMc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+;        oATMSoilc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)   0.._LENGTH
+;        oATMForc.IF(ZZ=NULL,,ZZ)byMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+;      ENDFOR
+;      
+;      ;Carbon Harvested Wood Products
+;      oSolidSWcByMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+;      oSolidHWcByMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+;      oPulpSWcbyMU.IF(XX=NULL,,tXX)(YY)        0.._LENGTH
+;      oPulpHWcbyMU.IF(XX=NULL,,tXX)(YY)        0.._LENGTH
+;      oBiomassSWcbyMU.IF(XX=NULL,,tXX)(YY)     0.._LENGTH
+;      oBiomassHWcbyMU.IF(XX=NULL,,tXX)(YY)     0.._LENGTH
+;      oTotalHWPcbyMU.IF(XX=NULL,,tXX)(YY)      0.._LENGTH
+;      oCulmSolidSWcByMU.IF(XX=NULL,,tXX)(YY)   0.._LENGTH
+;      oCulmSolidHWcByMU.IF(XX=NULL,,tXX)(YY)   0.._LENGTH
+;      oCulmPulpSWcByMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+;      oCulmPulpHWcByMU.IF(XX=NULL,,tXX)(YY)    0.._LENGTH
+;      oCulmHWPcByMU.IF(XX=NULL,,tXX)(YY)       0.._LENGTH
+;      
+;      ;Carbon Atmosphere
+;      oATMBiocbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+;      oATMDOMcbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+;      oATMSoilcbyMU.IF(XX=NULL,,tXX)(YY)       1.._LENGTH
+;      oATMForcbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+;      oATMHWPcbyMU.IF(XX=NULL,,tXX)(YY)        1.._LENGTH
+;      oATMTotalcbyMU.IF(XX=NULL,,tXX)(YY)      1.._LENGTH
+;
+;    ENDFOR
+;  ENDFOR
+;;<ENDGROUP> Carbon.dbf
+

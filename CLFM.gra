@@ -1,0 +1,503 @@
+;FOREACH XX IN(MUALL,CRNALL,#opMUs)
+;*PAGE MU_XX
+;.IF(XX.rec = 1,*PALETTE _DEFAULT)
+;.IF(XX.rec = 1,*SCREENSIZE MAXIMIZED)
+;.IF(XX.rec = 1,*FONT1 "Tahoma" 8 0 0000 )
+;.IF(XX.rec = 1,*FONT2 "Tahoma" 8 0 0000 )
+;.IF(XX.rec = 1,*FONT3 "Tahoma" 8 0 0000 )
+;.IF(XX.rec = 1,*YEARS 2014 5)
+;.IF(XX.rec = 1,*SAVEIMAGEAS clfm.jpg)
+;*WINDOW {1}(696,714,1000,1000) "Ageclass Distribution by Management Status (ha)[XX]" _STACK
+  ;_LEGEND (935,782)
+;_YAXIS(*,*,*,6)
+;*WINDOW {2}(18,716,359,1000) "Area Treated by Management Activity (ha/year)[XX]" _STACK
+  ;_LEGEND (304,858)
+;_YAXIS(*,*,*,6)
+;*WINDOW {3}(368,717,703,1000) "Silvicultural Costs by Management Activity ($/year)[XX]" _STACK
+  ;_LEGEND (648,875)
+;_YAXIS(*,*,*,6)
+;*WINDOW {4}(689,0,1000,238) "Working Forest Area by Management Status (ha)[XX]" _STACK
+  ;_LEGEND (937,95)
+;_YAXIS(*,*,*,6)
+;*WINDOW {5}(14,248,358,461) "Hardwood (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]" _STACK
+  ;_LEGEND (299,353)
+;_YAXIS(*,*,*,6)
+;*WINDOW {6}(368,247,703,461) "Spruce-Fir (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]" _STACK
+  ;_LEGEND (648,371)
+;_YAXIS(*,*,*,6)
+;*WINDOW {7}(14,0,359,239) "Total (Merchantable Bole) Operable Inventory b ySpecies Group (gmt)[XX]" _STACK
+  ;_LEGEND (298,129)
+;_YAXIS(*,*,*,6)
+;*WINDOW {8}(387,462,692,705) "Harvest Area by Harvest Type (ha/yr)[XX]"
+  ;_LEGEND (588,579)
+;_YAXIS(*,*,2,6)
+;*WINDOW {9}(365,1,701,241) "Softwood (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]" _STACK
+  ;_LEGEND (628,151)
+;_YAXIS(*,*,*,6)
+;*WINDOW {10}(34,462,350,705) "Estimate Average Piece-Size (trees/m³)[XX]"
+  ;_LEGEND (279,657)
+;_YAXIS(*,*,*,6)
+;*WINDOW {11}(693,247,1000,461) "Spruce-Fir Harvest by Management Status (gmt/year)[XX]" _STACK
+  ;_LEGEND (963,319)
+;_YAXIS(*,*,*,6)
+;*WINDOW {12}(696,459,1000,700) "Average Harvest MAI by Management Status (m³/ha/yr)[XX]"
+  ;_LEGEND (959,477)
+;_YAXIS(*,*,*,6)
+
+;*LINES
+
+  ;;Ageclass Distribution by Management Status (ha)[XX]
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? NAU WLB WLB ? ? ? 1 1 _BLACK _MUSTARD _SOLID "NAU "
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? NAE WLB WLB ? ? ? 1 1 _BLACK _EMERALD _SOLID "NAE "
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? NRX WLB WLB ? ? ? 1 1 _BLACK _GREEN _SOLID "NRG"
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? PLX WLB WLB ? ? ? 1 1 _BLACK _ORANGE _SOLID "PLT "
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? PCT WLB WLB ? ? ? 1 1 _BLACK _BROWN _SOLID "PCT "
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? CTX WLB WLB ? ? ? 1 1 _BLACK _MAROON _SOLID "CTH "
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? SHX WLB WLB ? ? ? 1 1 _BLACK _PEACH _SOLID "SEL "
+  ;_AGECLASS ? XX ? ? ? ? ? ? ? ESC WLB WLB ? ? ? 1 1 _BLACK _GRAY _SOLID "ESC "
+
+  ;;Area Treated by Management Activity (ha/year)[XX]
+  ;ohvacCCHabyMU(XX) 2 #gsf _GREEN _BLACK _SOLID "CC"
+  ;ohvacORHabyMU(XX) 2 #gsf _BLACK _BLACK _SOLID "OR"
+  ;ohvacHCHabyMU(XX) 2 #gsf _RGB(252,136,116) _BLACK _SOLID "HC"
+  ;ohvacECHabyMU(XX) 2 #gsf _EMERALD _BLACK _SOLID "EC"
+  ;ohvacPLHabyMU(XX) 2 #gsf _ORANGE _BLACK _SOLID "PL"
+  ;ohvacPTHabyMU(XX) 2 #gsf _BROWN _BLACK _SOLID "PT"
+  ;ohvacSCHabyMU(XX) 2 #gsf _RGB(210,035,004) _BLACK _SOLID "SC"
+  ;ohvacSLHabyMU(XX) 2 #gsf _GRAY _BLACK _SOLID "SL"
+  ;ohvacCTHabyMU(XX) 2 #gsf _MAROON _BLACK _SOLID "CT"
+  ;ohvacSHHabyMU(XX) 2 #gsf _PEACH _BLACK _SOLID "SH"
+
+  ;;Silvicultural Costs by Management Activity ($/year)[XX]
+  ;oECCostSfobyMU(XX) 3 #gsp _EMERALD _BLACK _SOLID "EC"
+  ;oPLCostSfobyMU(XX) 3 #gsp _ORANGE _BLACK _SOLID "PL"
+  ;oPTCostSfobyMU(XX) 3 #gsp _BROWN _BLACK _SOLID "PT"
+  ;oCTCostSfobyMU(XX) 3 #gsp _MAROON _BLACK _SOLID "CT"
+  ;oSHCostSfobyMU(XX) 3 #gsp _PEACH _BLACK _SOLID "SH"
+  ;oSLCostSfobyMU(XX) 3 #gsp _GRAY _BLACK _SOLID "SL"
+  ;oSCCostSfobyMU(XX) 3 #gsp _RGB(210,035,004) _BLACK _SOLID "SC"
+  ;oORCostSfobyMU(XX) 3 #gsp _BLACK _BLACK _SOLID "OR"
+  ;oHCCostSfobyMU(XX) 3 #gsp _RGB(252,136,116) _BLACK _SOLID "HC"
+
+  ;;Working Forest Area by Management Status (ha)[XX]
+  ;ohaFHbyMUstNAU(XX) 4 1 _MUSTARD _BLACK _SOLID "NAU"
+  ;ohaFHbyMUstNAE(XX) 4 1 _EMERALD _BLACK _SOLID "NAE"
+  ;ohaFHbyMUstNRX(XX) 4 1 _GREEN _BLACK _SOLID "NRG"
+  ;ohaFHbyMUstPLX(XX) 4 1 _ORANGE _BLACK _SOLID "PLT"
+  ;ohaFHbyMUstPCT(XX) 4 1 _BROWN _BLACK _SOLID "PCT"
+  ;ohaFHbyMUstCTX(XX) 4 1 _MAROON _BLACK _SOLID "CTH"
+  ;ohaFHbyMUstSHX(XX) 4 1 _PEACH _BLACK _SOLID "SEL"
+  ;ohaFHbyMUstESC(XX) 4 1 _GRAY _BLACK _SOLID "ESC"
+
+  ;;Hardwood (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]
+  ;oaCCvHbyMU(XX)    5 #gsfht _GREEN _BLACK _SOLID "CC"
+  ;orPPaHCvHbyMU(XX) 5 #gsfht _RGB(252,136,116) _BLACK _SOLID "HC"
+  ;orPPaSCvHbyMU(XX) 5 #gsfht _RGB(210,035,004) _BLACK _SOLID "SC"
+  ;orSLaORvHbyMU(XX) 5 #gsfht _BLACK _BLACK _SOLID "OR"
+  ;orSLaSLvHbyMU(XX) 5 #gsfht _GRAY _BLACK _SOLID "SL"
+  ;oaCTvHbyMU(XX)    5 #gsfht _MAROON _BLACK _SOLID "CT"
+  ;oaSHvHbyMU(XX)    5 #gsfht _PEACH _BLACK _SOLID "SH"
+
+  ;;Spruce-Fir (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]
+  ;oaCCvSPBFbyMU(XX)    6 #gsfst _GREEN _BLACK _SOLID "CC"
+  ;orPPaHCvSPBFbyMU(XX) 6 #gsfst _RGB(252,136,116) _BLACK _SOLID "HC"
+  ;orPPaSCvSPBFbyMU(XX) 6 #gsfst _RGB(210,035,004) _BLACK _SOLID "SC"
+  ;orSLaORvSPBFbyMU(XX) 6 #gsfst _BLACK _BLACK _SOLID "OR"
+  ;orSLaSLvSPBFbyMU(XX) 6 #gsfst _GRAY _BLACK _SOLID "SL"
+  ;oaCTvSPBFbyMU(XX)    6 #gsfst _MAROON _BLACK _SOLID "CT"
+  ;oaSHvSPBFbyMU(XX)    6 #gsfst _PEACH _BLACK _SOLID "SH"
+
+  ;;Total (Merchantable Bole) Operable Inventory by Species Group (gmt)[XX]
+  ;ogsvSbyMU(XX)   7 #gst _GREEN _BLACK _SOLID "Softwood"
+  ;ogsvHbyMU(XX) 7 #gst _BROWN _BLACK _SOLID "Hardwood"
+
+  ;;Harvest Area by Harvest Type (ha/yr)[XX]
+  ;ohvacHVHabyMU(XX)  8 #gsf _BLACK _NONE _SOLID 2 "TotalHarvest"
+  ;ohvacCC4HabyMU(XX) 8 #gsf _GREEN _SQUARE _SOLID 2 "CC,OR"
+  ;ohvacPH4HabyMU(XX) 8 #gsf _SCARLET _SQUARE _DASHED 2 "SH,CT,SL,SC,HC"
+  ;;ohvacCCHabyMU(XX)  8 #gsf _GREEN _SQUARE _SOLID 2 "CC"
+  ;;ohvacSCHabyMU(XX)  8 #gsf _RGB(210,035,004) _NONE _DOTTED "SC"
+  ;;ohvacSLHabyMU(XX)  8 #gsf _GRAY _NONE _DOTTED "SL"
+  ;;ohvacSHHabyMU(XX)  8 #gsf _PEACH _NONE _DOTTED "SH"
+  ;;ohvacCTHabyMU(XX)  8 #gsf _MAROON _NONE _DOTTED "CT"
+
+  ;;Softwood (Merchantable Bole) Harvest by Harvest System (gmt/year)[XX]
+  ;oaCCvSbyMU(XX)    9 #gsfst _GREEN _BLACK _SOLID "CC"
+  ;orPPaHCvSbyMU(XX) 9 #gsfst _RGB(252,136,116) _BLACK _SOLID "HC"
+  ;orPPaSCvSbyMU(XX) 9 #gsfst _RGB(210,035,004) _BLACK _SOLID "SC"
+  ;orSLaORvSbyMU(XX) 9 #gsfst _BLACK _BLACK _SOLID "OR"
+  ;orSLaSLvSbyMU(XX) 9 #gsfst _GRAY _BLACK _SOLID "SL"
+  ;oaCTvSbyMU(XX)    9 #gsfst _MAROON _BLACK _SOLID "CT"
+  ;oaSHvSbyMU(XX)    9 #gsfst _PEACH _BLACK _SOLID "SH"
+
+  ;;Estimate Average Piece-Size (trees/m³)[XX]
+  ;ohAvSPSzbyMU(XX) 10 1 _GREEN _NONE _SOLID 3 "Softwood "
+  ;ohAvHPSzbyMU(XX) 10 1 _BROWN _CROSS _SOLID 3 "Hardwood "
+
+  ;;Spruce-Fir Harvest by Management Status (gmt/year)[XX]
+  ;oaHVvSPBFbyMUstNAU(XX) 11 #gsfst _MUSTARD _BLACK _SOLID "NAU"
+  ;oaHVvSPBFbyMUstNAE(XX) 11 #gsfst _EMERALD _BLACK _SOLID "NAE"
+  ;oaHVvSPBFbyMUstNRX(XX) 11 #gsfst _GREEN _BLACK _SOLID "NRG"
+  ;oaHVvSPBFbyMUstPLX(XX) 11 #gsfst _ORANGE _BLACK _SOLID "PLT"
+  ;oaHVvSPBFbyMUstPCT(XX) 11 #gsfst _BROWN _BLACK _SOLID "PCT"
+  ;oaHVvSPBFbyMUstCTX(XX) 11 #gsfst _MAROON _BLACK _SOLID "CTH"
+  ;oaHVvSPBFbyMUstSHX(XX) 11 #gsfst _PEACH _BLACK _SOLID "SEL"
+
+  ;;Average Harvest MAI by Management Status (m³/ha/yr)[XX]
+  ;oCCAvTMAIbyMUstNAU(XX) 12 1 _EMERALD _TRIANGLE _SOLID "NAE"
+  ;oCCAvTMAIbyMUstNAE(XX) 12 1 _EMERALD _CIRCLE _SOLID "NAU"
+  ;oCCAvTMAIbyMUstNRG(XX) 12 1 _GREEN _TRIANGLE _SOLID "NRG"
+  ;oCCAvTMAIbyMUstPCT(XX) 12 1 _BROWN _CROSS _SOLID "PCT"
+  ;oCCAvTMAIbyMUstPLX(XX) 12 1 _ORANGE _TRIANGLE _SOLID "PLT"
+
+;endfor
+
+
+;*PAGE HarvestOverviewMUsf
+;*PALETTE _DEFAULT
+;*WINDOW {1}(0,0,499,331) "SoftwoodHarvest(oaHVvSbyMUsf)" _STACK
+;_YAXIS(*,*,*,6)
+;*WINDOW {2}(501,0,1000,332) "TotalSoftwoodHarvest" _BAR
+;_YAXIS(*,*,*,6)
+;*WINDOW {3}(0,331,499,664) "SpruceFirHarvest(oaHVvSPBFbyMUsf)" _STACK
+;_YAXIS(*,*,*,6)
+;*WINDOW {4}(501,334,1000,667) "TotalSpruceFirHarvest" _BAR
+;_YAXIS(*,*,*,6)
+;*WINDOW {5}(0,666,499,1000) "HardwoodHarvest(oaHVvHbyMUsf)" _STACK
+;_YAXIS(*,*,*,6)
+;*WINDOW {6}(501,665,1000,1000) "TotalHardwoodHarvest" _BAR
+;_YAXIS(*,*,*,6)
+;*LINES
+
+  ;;Softwood by MU
+  ;OAHVVSBYMUsf(CRNLICPHP)    1 1 _RGB(153,229,162) _SOLID "CRNLICPHP"
+  ;OAHVVSBYMUsf(CRNUNLICE)    1 1 _RGB(165,196,169) _SOLID "CRNUNLICE"
+  ;OAHVVSBYMUsf(PRVE)         1 1 _RGB(204,255,210) _SOLID "PRVE"
+  ;OAHVVSBYMUsf(INDE)         1 1 _RGB(178,126,051) _SOLID "INDE"
+
+  ;OAHVVSBYMUsf(CRNLICNPL)    1 1 _RGB(153,229,162) _SOLID "CRNLICNPL"
+  ;OAHVVSBYMUsf(CRNUNLICC)    1 1 _RGB(165,196,169) _SOLID "CRNUNLICC"
+  ;OAHVVSBYMUsf(PRVC)         1 1 _RGB(204,255,210) _SOLID "PRVC"
+  ;OAHVVSBYMUsf(INDC)         1 1 _RGB(178,126,051) _SOLID "INDC"
+
+  ;OAHVVSBYMUsf(CRNLICMCF)    1 1 _RGB(153,229,162) _SOLID "CRNLICMCF"
+  ;OAHVVSBYMUsf(CRNAILBRV)    1 1 _RGB(255,153,255) _SOLID "CRNAILBRV"
+  ;OAHVVSBYMUsf(CRNAILSTC)    1 1 _RGB(255,051,255) _SOLID "CRNAILSTC"
+  ;OAHVVSBYMUsf(CRNUNLICW)    1 1 _RGB(165,196,169) _SOLID "CRNUNLICW"
+  ;OAHVVSBYMUsf(PRVW)         1 1 _RGB(204,255,210) _SOLID "PRVW"
+  ;OAHVVSBYMUsf(INDW)         1 1 _RGB(178,126,051) _SOLID "INDW"
+
+  ;;Softwood Total
+  ;OAHVVSBYMUsf               2 1 _GREEN   _SOLID "Total Softwood"
+
+  ;;SpruceFir by MU
+  ;OAHVVSPBFBYMUsf(CRNLICPHP) 3 1 _RGB(153,229,162) _SOLID "CRNLICPHP"
+  ;OAHVVSPBFBYMUsf(CRNUNLICE) 3 1 _RGB(165,196,169) _SOLID "CRNUNLICE"
+  ;OAHVVSPBFBYMUsf(PRVE)      3 1 _RGB(204,255,210) _SOLID "PRVE"
+  ;OAHVVSPBFBYMUsf(INDE)      3 1 _RGB(178,126,051) _SOLID "INDE"
+
+  ;OAHVVSPBFBYMUsf(CRNLICNPL) 3 1 _RGB(153,229,162) _SOLID "CRNLICNPL"
+  ;OAHVVSPBFBYMUsf(CRNUNLICC) 3 1 _RGB(165,196,169) _SOLID "CRNUNLICC"
+  ;OAHVVSPBFBYMUsf(PRVC)      3 1 _RGB(204,255,210) _SOLID "PRVC"
+  ;OAHVVSPBFBYMUsf(INDC)      3 1 _RGB(178,126,051) _SOLID "INDC"
+
+  ;OAHVVSPBFBYMUsf(CRNLICMCF) 3 1 _RGB(153,229,162) _SOLID "CRNLICMCF"
+  ;OAHVVSPBFBYMUsf(CRNAILBRV) 3 1 _RGB(255,153,255) _SOLID "CRNAILBRV"
+  ;OAHVVSPBFBYMUsf(CRNAILSTC) 3 1 _RGB(255,051,255) _SOLID "CRNAILSTC"
+  ;OAHVVSPBFBYMUsf(CRNUNLICW) 3 1 _RGB(165,196,169) _SOLID "CRNUNLICW"
+  ;OAHVVSPBFBYMUsf(PRVW)      3 1 _RGB(204,255,210) _SOLID "PRVW"
+  ;OAHVVSPBFBYMUsf(INDW)      3 1 _RGB(178,126,051) _SOLID "INDW"
+
+  ;;SpruceFir Total
+  ;OAHVVSPBFBYMUsf            4 1 _EMERALD _SOLID "Total SpruceFir"
+
+  ;;Hardwood by MU
+  ;OAHVVHBYMUsf(CRNLICPHP)    5 1 _RGB(153,229,162) _SOLID "CRNLICPHP"
+  ;OAHVVHBYMUsf(CRNUNLICE)    5 1 _RGB(165,196,169) _SOLID "CRNUNLICE"
+  ;OAHVVHBYMUsf(PRVE)         5 1 _RGB(204,255,210) _SOLID "PRVE"
+  ;OAHVVHBYMUsf(INDE)         5 1 _RGB(178,126,051) _SOLID "INDE"
+
+  ;OAHVVHBYMUsf(CRNLICNPL)    5 1 _RGB(153,229,162) _SOLID "CRNLICNPL"
+  ;OAHVVHBYMUsf(CRNUNLICC)    5 1 _RGB(165,196,169) _SOLID "CRNUNLICC"
+  ;OAHVVHBYMUsf(PRVC)         5 1 _RGB(204,255,210) _SOLID "PRVC"
+  ;OAHVVHBYMUsf(INDC)         5 1 _RGB(178,126,051) _SOLID "INDC"
+
+  ;OAHVVHBYMUsf(CRNLICMCF)    5 1 _RGB(153,229,162) _SOLID "CRNLICMCF"
+  ;OAHVVHBYMUsf(CRNAILBRV)    5 1 _RGB(255,153,255) _SOLID "CRNAILBRV"
+  ;OAHVVHBYMUsf(CRNAILSTC)    5 1 _RGB(255,051,255) _SOLID "CRNAILSTC"
+  ;OAHVVHBYMUsf(CRNUNLICW)    5 1 _RGB(165,196,169) _SOLID "CRNUNLICW"
+  ;OAHVVHBYMUsf(PRVW)         5 1 _RGB(204,255,210) _SOLID "PRVW"
+  ;OAHVVHBYMUsf(INDW)         5 1 _RGB(178,126,051) _SOLID "INDW"
+
+  ;;Hardwood Total
+  ;OAHVVHBYMUsf               6 1 _ORANGE _SOLID "Total Hardwood"
+
+;*PAGE Wildlife
+;*PALETTE _DEFAULT
+;*WINDOW {1}(0,46,449,379) "Moose Softwood Habitat: Working Landbase"
+  ;_LEGEND (26,10)
+  ;_YAXIS(*,*,*,6)
+;*WINDOW {2}(480,50,942,384) "Deer Wintering Softwood Habitat: Working Landbase"
+  ;_LEGEND (499,14)
+  ;_YAXIS(*,*,*,6)
+;*WINDOW {3}(499,667,998,1000) "Ageclass: Deer: Softwood" _STACK
+  ;_LEGEND (513,668)
+  ;_YAXIS(*,*,*,6)
+;*WINDOW {4}(0,666,499,999) "Ageclass: Moose: Softwood" _STACK
+  ;_LEGEND (20,668)
+  ;_YAXIS(*,*,*,6)
+;*WINDOW {5}(0,379,498,666) "Moose Zone Harvest:Base"
+  ;_LEGEND (-96,390)
+  ;_YAXIS(*,*,*,*)
+;*WINDOW {6}(497,384,995,667) "Moose Zone Harvest:Ajusted"
+  ;_LEGEND (680,395)
+  ;_YAXIS(*,*,*,*)
+;*LINES
+  ;OMOOSEHASWDBYSITE 1 1 _GREEN _CROSS _SOLID "Area Within Moose Zone of Total Softwood on Working Landbase: By Site - ha"
+  ;OMOOSEHAMATSWDBYSITE 1 1 _BLUE _NONE _SOLID 3 "Area Within Moose Zone of Mature Softwood on Working Landbase: By Site - ha"
+
+  ;oDeerHaSwdbyEU 2 1 _GREEN _CROSS _SOLID "Area Within Deer Zone of Total Softwood on Working Landbase: By Site - ha"
+  ;oDeerHaMatSwdbyEU 2 1 _BLUE _NONE _SOLID 3 "Area Within Deer Zone of Mature Softwood on Working Landbase: By Site - ha"
+
+  ;_AGECLASS ? ? ? ? WDWA ? SWD ? ? ? WLB WLB ? ? ? 3 1 _BROWN _BROWN _SOLID "? ? ? ? WDWA ? SWD ? ? ? NOEXCLSET NOEXCLSET"
+  ;_AGECLASS ? ? ? ? wMoose ? SWD ? ? ? WLB WLB ? ? ? 4 1 _BROWN _BROWN _SOLID "? ? ? MOOSE ? ? SWD ? ? ? NOEXCLSET NOEXCLSET"
+
+  ;oaHVvSPBFbyMUwMoose(CRNALL)   5 #gsfst _GREEN    _SOLID "CRNALL"
+  ;FOREACH ZZ IN(#opMUsCrnMos)
+    ;oaHVvSPBFbyMUwMoose(ZZ)     5  "ZZ"
+  ;ENDFOR
+
+  ;OAHVVSPBFBYMUwMoosesf(CRNALL) 6 1   _EMERALD     _SOLID "CRNALL"
+  ;FOREACH ZZ IN(#opMUsCrnMos)
+    ;OAHVVSPBFBYMUwMoosesf(ZZ)   6   "ZZ"
+  ;ENDFOR
+
+
+;*PAGE Ecosystem Indicators
+;*PALETTE _DEFAULT
+;*WINDOW (0,0,384,285) "Development Stages - Forested Total" _STACK
+;_LEGEND (282,103)
+;_YAXIS(*,*,*,6)
+;*WINDOW (795,485,1000,1000) "Treatment Levels (ha)"
+;_LEGEND (839,550)
+;_YAXIS(*,*,*,6)
+;*WINDOW (801,0,1000,487) "Forest State (ha)" _STACK
+;_LEGEND (924,127)
+;_YAXIS(*,*,*,6)
+;*WINDOW (0,316,112,460) "Mature-Old Forest Development Classes as % of Total"
+;_YAXIS(*,*,2,6)
+;*WINDOW (0,493,116,632) "Late Seral as % of Total"
+;_YAXIS(*,*,2,6)
+;*WINDOW (0,678,342,1000) "Forest Community Distribution (ha)" _STACK
+;_LEGEND (333,696)
+;_YAXIS(*,*,*,6)
+;*WINDOW (396,14,798,281) "Ageclass by Forest State (ha)" _STACK
+;_YAXIS(*,*,*,6)
+;*WINDOW (401,677,752,1000) "Seral Stage Distribution (ha)" _STACK
+;_LEGEND (745,696)
+;_YAXIS(*,*,*,6)
+;*WINDOW (116,360,330,673) "FREQ"
+;_LEGEND (116,297)
+;_YAXIS(0,1,2,6)
+;*WINDOW (327,358,557,673) "INFREQ"
+;_YAXIS(0,1,2,6)
+;*WINDOW (558,358,798,681) "GAP"
+;_YAXIS(0,1,2,6)
+;*LINES
+;OESTFLB 1 1 _BROWN _SOLID "Est "
+;OYNGFLB 1 1 _ORANGE _SOLID "Yng "
+;OMT1FLB 1 1 _PEACH _SOLID "Mt1 "
+;OMT2FLB 1 1 _EMERALD _SOLID "Mt2 "
+;OOLDFLB 1 1 _GREEN _SOLID "Old "
+
+;ohvacCC4HabyEU(NDRALL) 2 1 _GREEN _BLACK _SOLID "CC,OR"
+;ohvacPH4HabyEU(NDRALL) 2 1 _PEACH _BLACK _SOLID "SH,CT,SL,HC,SC"
+;;ohvacSCHabyEU(NDRALL)  2 1 _RGB(210,035,004) _CROSS _SOLID "SC"
+;;ohvacHCHabyEU(NDRALL)  2 1 _RGB(252,136,116) _CIRCLE _SOLID "HC"
+;;ohvacSLHabyEU(NDRALL)  2 1 _GREEN _CROSS _SOLID "SL"
+;;ohvacORHabyEU(NDRALL)  2 1 _GREEN _CIRCLE _SOLID "OR"
+;;ohvacCCHabyEU(NDRALL)  2 1 _GREEN _NONE _SOLID 2 "CC "
+;;ohvacPH4HabyEU(NDRALL)  2 1 _RED _NONE _SOLID 2 "PH "
+;;ohvacECHabyEU(NDRALL)  2 1 _BROWN _CIRCLE _SOLID "EC "
+;;ohvacPLHabyEU(NDRALL)  2 1 _SCARLET _CROSS _SOLID "PL "
+;;ohvacPTHabyEU(NDRALL)  2 1 _GREEN _TRIANGLE _SOLID "PT "
+;;ohvacCTHabyEU(NDRALL)  2 1 _MAROON _SQUARE _SOLID "CT "
+;;ohvacSHHabyEU(NDRALL)  2 1 _PEACH _CROSS _SOLID "SH "
+
+;oELChaFLBESC(NDRALL) 3 1 _GRAY _FDIAGONAL "ESC "
+;oELChaFLBNAE(NDRALL) 3 1 _GREEN _SOLID "NAE "
+;oELChaFLBNAU(NDRALL) 3 1 _MUSTARD _SOLID "NAU "
+;oELChaFLBNRX(NDRALL) 3 1 _EMERALD _SOLID "NRG "
+;oELChaFLBPLX(NDRALL) 3 1 _ORANGE _SOLID "PLT "
+;oELChaFLBPCT(NDRALL) 3 1 _BROWN _SOLID "PCT "
+;oELChaFLBCTX(NDRALL) 3 1 _MAROON _SOLID "CTH "
+;oELChaFLBSHX(NDRALL) 3 1 _PEACH _SOLID "SEL "
+
+;OMTOPFLB(NDRALL) 4 1 _GREEN _NONE _SOLID 2 "Mat & Old/Multi Aged Forest"
+;OM2OPFLB(NDRALL) 4 1 _GREEN _CROSS _SOLID 2 "Mt2 & Old/Multi Aged Forest"
+;OOLDPFLB(NDRALL) 4 1 _SCARLET _NONE _SOLID 2 "Old/Multi Aged Forest"
+
+;OLATPFLB(NDRALL) 5 1 _BROWN _CIRCLE _SOLID 3 "Late Seral Stage"
+
+;OHIHWFLB(NDRALL) 6 1 _PEACH _SOLID "HIHw "
+;OHITHWFLB(NDRALL) 6 1 _YELLOW _SOLID "HITHw "
+;OHTHWFLB(NDRALL) 6 1 _MUSTARD _SOLID "HTHw "
+;OMIHWHSFLB(NDRALL) 6 1 _PURPLE _SOLID "MIHwHS "
+;OMIHWSHFLB(NDRALL) 6 1 _PURPLE _DIAGCROSS "MIHwSH "
+;OMTHWFLB(NDRALL) 6 1 _MAROON _SOLID "MTHw "
+;OSRSBSDOMFLB(NDRALL) 6 1 _GREEN _SOLID "SrSbSDom "
+;OSWSDOMFLB(NDRALL) 6 1 _GRAY _SOLID "SwSDom "
+;OSBFDOMFLB(NDRALL) 6 1 _EMERALD _SOLID "SbFDom "
+;OSSPBFDOMFLB(NDRALL) 6 1 _EMERALD _SOLID "SPpbFDom "
+;OSPIDOMFLB(NDRALL) 6 1 _SCARLET _SOLID "SPiDom "
+;OSMHEPISPFLB(NDRALL) 6 1 _ORANGE _SOLID "SMHePiSp "
+
+;_AGECLASS ? ? ? ? ? ? ? ? ? NRX FLB FLB ? ? ? 7 1 _BLACK _EMERALD _SOLID "NRG "
+;_AGECLASS ? ? ? ? ? ? ? ? ? PLX FLB FLB ? ? ? 7 1 _BLACK _ORANGE _SOLID "PLT "
+;_AGECLASS ? ? ? ? ? ? ? ? ? PCT FLB FLB ? ? ? 7 1 _BLACK _BROWN _SOLID "PCT "
+;_AGECLASS ? ? ? ? ? ? ? ? ? CTX FLB FLB ? ? ? 7 1 _BLACK _MAROON _SOLID "CTH "
+;_AGECLASS ? ? ? ? ? ? ? ? ? SHX FLB FLB ? ? ? 7 1 _BLACK _PEACH _SOLID "SEL "
+
+;OEARFLB(NDRALL) 8 1 _PEACH _SOLID "Early Seral"
+;OMIDFLB(NDRALL) 8 1 _PURPLE _SOLID "Mid Seral"
+;OLATFLB(NDRALL) 8 1 _GREEN _SOLID "Late Seral"
+
+;OOLDPFLB(NDRFRQ) 9 1 _GREEN _CIRCLE _SOLID 4 "(Ndrfreq) Precent Area in the Multi-Aged/Old Forest Development Class"
+;OMTOPFLB(NDRFRQ) 9 1 _BLUE _CROSS _SOLID 4 "(Ndrfreq) Percent Area in the Combined Mature1 & Mature2 & Multi-Aged/Old Forest Development Class"
+;OM2OPFLB(NDRFRQ) 9 1 _GRAY _NONE _DASHED "(Ndrfreq) Percent Area in the Combined Mature - 2 & Multi-Aged/Old Forest Development Class"
+;OLATPFLB(NDRFRQ) 9 1 _RED _NONE _SOLID 3 "(Ndrfreq) Percent Area in an Late Seral Stage"
+
+;OOLDPFLB(NDRIFR) 10 1 _GREEN _CIRCLE _SOLID 4 "(Ndrinfreq) Precent Area in the Multi-Aged/Old Forest Development Class"
+;OMTOPFLB(NDRIFR) 10 1 _BLUE _CROSS _SOLID 4 "(Ndrinfreq) Percent Area in the Combined Mature1 & Mature2 & Multi-Aged/Old Forest Development Class"
+;OM2OPFLB(NDRIFR) 10 1 _GRAY _NONE _DASHED "(Ndrinfreq) Percent Area in the Combined Mature - 2 & Multi-Aged/Old Forest Development Class"
+;OLATPFLB(NDRIFR) 10 1 _RED _NONE _SOLID 3 "(Ndrinfreq) Percent Area in an Late Seral Stage"
+
+;OOLDPFLB(NDRGAP) 11 1 _GREEN _CIRCLE _SOLID 4 "(Ndrgap) Precent Area in the Multi-Aged/Old Forest Development Class"
+;OMTOPFLB(NDRGAP) 11 1 _BLUE _CROSS _SOLID 4 "(Ndrgap) Percent Area in the Combined Mature1 & Mature2 & Multi-Aged/Old Forest Development Class"
+;OM2OPFLB(NDRGAP) 11 1 _GRAY _NONE _DASHED "(Ndrgap) Percent Area in the Combined Mature - 2 & Multi-Aged/Old Forest Development Class"
+;OLATPFLB(NDRGAP) 11 1 _RED _NONE _SOLID 3 "(Ndrgap) Percent Area in an Late Seral Stage"
+
+;FOREACH XX IN(NDRGAP,NDRIFR,NDRFRQ,#opEUs)
+;*PAGE XX
+;*PALETTE _DEFAULT
+;*WINDOW (0,0,384,285) "Development Stages - Forested Total - XX" _STACK
+;_LEGEND (282,103)
+;_YAXIS(*,*,*,6)
+;*WINDOW (795,485,1000,1000) "Harvest Activity - XX (ha)"  _STACK
+;_LEGEND (839,550)
+;_YAXIS(*,*,*,6)
+;*WINDOW (801,0,1000,487) "Forest State - XX (ha)" _STACK
+;_LEGEND (924,127)
+;_YAXIS(*,*,*,6)
+;*WINDOW (0,316,371,461) "Mature-Old Forest Development Classes as % of Total - XX"
+;_YAXIS(*,*,2,6)
+;*WINDOW (0,493,364,633) "Late Seral as % of Total - XX"
+;_YAXIS(*,*,2,6)
+;*WINDOW (0,678,342,1000) "Forest Community Distribution - XX (ha)" _STACK
+;_LEGEND (333,696)
+;_YAXIS(*,*,*,6)
+;*WINDOW (379,14,602,281) "Ageclass by Forest State - XX (ha)" _STACK
+;_YAXIS(*,*,*,6)
+;*WINDOW (401,677,752,1000) "Seral Stage Distribution - XX (ha)" _STACK
+;_LEGEND (745,696)
+;_YAXIS(*,*,*,6)
+;*WINDOW (600,0,798,283) "" _STACK
+;_LEGEND (847,18)
+;_YAXIS(*,*,*,6)
+;*WINDOW (370,280,593,468) "Old" _STACK
+;_YAXIS(*,*,2,6)
+;*WINDOW (593,282,802,469) "M2O" _STACK
+;_YAXIS(*,*,2,6)
+;*WINDOW (595,469,796,643) "MTO" _STACK
+;_YAXIS(*,*,1,6)
+;*WINDOW (363,469,595,647) "Late" _STACK
+;_YAXIS(*,*,1,6)
+;*LINES
+
+  ;;Development Stages - Forested Total - XX
+  ;OESTFLB(XX) 1 1 _BROWN _SOLID "Est"
+  ;OYNGFLB(XX) 1 1 _ORANGE _SOLID "Yng"
+  ;OMT1FLB(XX) 1 1 _PEACH _SOLID "Mt1"
+  ;OMT2FLB(XX) 1 1 _EMERALD _SOLID "Mt2"
+  ;OOLDFLB(XX) 1 1 _GREEN _SOLID "Old"
+
+  ;;Treatment Levels - XX (ha)
+  ;;Area Treated by Management Activity  - XX (ha/yr)
+  ;ohvacCC4HabyEU(XX) 2 #gsf _GREEN _BLACK _SOLID "CC,OR"
+  ;ohvacPH4HabyEU(XX) 2 #gsf _PEACH _BLACK _SOLID "SH,CT,SL,HC,SC"
+  ;;ohvacCCHabyEU(XX) 2 #gsf _GREEN _BLACK _SOLID "CC"
+  ;;ohvacORHabyEU(XX) 2 #gsf _BLACK _BLACK _SOLID "OR"
+  ;;ohvacHCHabyEU(XX) 2 #gsf _RGB(252,136,116) _BLACK _SOLID "HC"
+  ;;ohvacSCHabyEU(XX) 2 #gsf _RGB(210,035,004) _BLACK _SOLID "SC"
+  ;;ohvacSLHabyEU(XX) 2 #gsf _GRAY _BLACK _SOLID "SL"
+  ;;ohvacCTHabyEU(XX) 2 #gsf _MAROON _BLACK _SOLID "CT"
+  ;;ohvacSHHabyEU(XX) 2 #gsf _PEACH _BLACK _SOLID "SH"
+
+  ;;Forest State - XX (ha)
+  ;oELChaFLBESC(XX) 3 1 _GRAY _FDIAGONAL "ESC"
+  ;oELChaFLBNAE(XX) 3 1 _GREEN _SOLID "NAE"
+  ;oELChaFLBNAU(XX) 3 1 _MUSTARD _SOLID "NAU"
+  ;oELChaFLBNRX(XX) 3 1 _EMERALD _SOLID "NRG"
+  ;oELChaFLBPLX(XX) 3 1 _ORANGE _SOLID "PLT"
+  ;oELChaFLBPCT(XX) 3 1 _BROWN _SOLID "PCT"
+  ;oELChaFLBCTX(XX) 3 1 _MAROON _SOLID "CTH"
+  ;oELChaFLBSHX(XX) 3 1 _PEACH _SOLID "SEL"
+
+  ;;Mature-Old Forest Development Classes as % of Total - XX
+  ;OMTOPFLB(XX) 4 1 _GREEN _NONE _SOLID 2 "Mat & Old/Multi Aged Forest"
+  ;OM2OPFLB(XX) 4 1 _GREEN _CROSS _SOLID 2 "Mt2 & Old/Multi Aged Forest"
+  ;OOLDPFLB(XX) 4 1 _SCARLET _NONE _SOLID 2 "Old/Multi Aged Forest"
+
+  ;;Late Seral as % of Total - XX
+  ;OLATPFLB(XX) 5 1 _BROWN _CIRCLE _SOLID 3 "Late Seral Stage"
+
+  ;;Forest Community Distribution - XX (ha)
+  ;OUNKFORCOMMFLB(XX) 6 1 _GRAY _FDIAGONAL "URegen"
+  ;OHIHWFLB(XX) 6 1 _PEACH _SOLID "HIHw"
+  ;OHITHWFLB(XX) 6 1 _YELLOW _SOLID "HITHw"
+  ;OHTHWFLB(XX) 6 1 _MUSTARD _SOLID "HTHw"
+  ;OMIHWHSFLB(XX) 6 1 _PURPLE _SOLID "MIHwHS"
+  ;OMIHWSHFLB(XX) 6 1 _PURPLE _DIAGCROSS "MIHwSH"
+  ;OMTHWFLB(XX) 6 1 _MAROON _SOLID "MTHw"
+  ;OSRSBSDOMFLB(XX) 6 1 _GREEN _SOLID "SrSbSDom"
+  ;OSWSDOMFLB(XX) 6 1 _GRAY _SOLID "SwSDom"
+  ;OSBFDOMFLB(XX) 6 1 _EMERALD _SOLID "SbFDom"
+  ;OSSPBFDOMFLB(XX) 6 1 _EMERALD _SOLID "SPpbFDom"
+  ;OSPIDOMFLB(XX) 6 1 _SCARLET _SOLID "SPiDom"
+  ;OSMHEPISPFLB(XX) 6 1 _ORANGE _SOLID "SMHePiSp"
+
+  ;;Ageclass by Forest State - XX (ha)
+  ;_AGECLASS XX ? ? ? ? ? ? ? ? NRX ? ? ? ? ? 7 1 _BLACK _EMERALD _SOLID "NRG"
+  ;_AGECLASS XX ? ? ? ? ? ? ? ? PLX ? ? ? ? ? 7 1 _BLACK _ORANGE _SOLID "PLT"
+  ;_AGECLASS XX ? ? ? ? ? ? ? ? PCT ? ? ? ? ? 7 1 _BLACK _BROWN _SOLID "PCT"
+  ;_AGECLASS XX ? ? ? ? ? ? ? ? CTX ? ? ? ? ? 7 1 _BLACK _MAROON _SOLID "CTH"
+  ;_AGECLASS XX ? ? ? ? ? ? ? ? SHX ? ? ? ? ? 7 1 _BLACK _PEACH _SOLID "SEL"
+
+  ;;Seral Stage Distribution - XX (ha)
+  ;OUNKFORCOMMFLB(XX) 8 1 _GRAY _FDIAGONAL "URegen"
+  ;OEARFLB(XX) 8 1 _PEACH _SOLID "Early Seral"
+  ;OMIDFLB(XX) 8 1 _PURPLE _SOLID "Mid Seral"
+  ;OLATFLB(XX) 8 1 _GREEN _SOLID "Late Seral"
+
+  ;;Ageclass by Landbase - XX (ha)
+  ;_AGECLASS XX ? ? ? ? ? ? ? ? ? RLB ? ? ? ? ? 9 1 _BLACK _PINK  _SOLID "RLB"
+  ;_AGECLASS XX ? ? ? ? ? ? ? ? ? WLB ? ? ? ? ? 9 1 _BLACK _GREEN _SOLID "WLB"
+
+
+  ;;OLD forest by Landbase - XX (ha)
+  ;OOLDPWLBpctFLB(XX) 10 1 _GREEN _SOLID "Precent Area in the Multi-Aged/Old Forest Development Class: Working Landbase"
+  ;OOLDPRLBpctFLB(XX) 10 1 _PINK _SOLID  "Precent Area in the Multi-Aged/Old Forest Development Class: Restricted Landbase"
+
+  ;;M2O by Landbase - XX (ha)
+  ;OM2OPWLBpctFLB(XX) 11 1 _GREEN _SOLID "Percent Area in the Combined Mature - 2 & Multi-Aged/Old Forest Development Class: Working Landbase"
+  ;OM2OPRLBpctFLB(XX) 11 1 _PINK _SOLID  "Percent Area in the Combined Mature - 2 & Multi-Aged/Old Forest Development Class: Restricted Landbase"
+
+  ;;MTO forest by Landbase - XX (ha)
+  ;OMTOPWLBpctFLB(XX) 12 1 _GREEN _SOLID "Percent Area in the Combined Mature1 & Mature2 & Multi-Aged/Old Forest Development Class: Working Landbase"
+  ;OMTOPRLBpctFLB(XX) 12 1 _PINK _SOLID  "Percent Area in the Combined Mature1 & Mature2 & Multi-Aged/Old Forest Development Class: Restricted Landbase"
+
+  ;;LAT forest by Landbase - XX (ha)
+  ;OLATPWLBpctFLB(XX) 13 1 _GREEN _SOLID "Percent Area in an Late Seral Stage: Working Landbase"
+  ;OLATPRLBpctFLB(XX) 13 1 _PINK _SOLID  "Percent Area in an Late Seral Stage: Restricted Landbase"
+
+;ENDFOR

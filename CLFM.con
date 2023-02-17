@@ -1,0 +1,407 @@
+; Scenario: 001_ebmTradeoff00pi_1
+; Saved on Nov 30 2016 at 12:03:21 pm
+{==================================================================}
+{                          /\     Nova Scotia                      }
+{                         /  \    Department of Natural Resources  }
+{                        /    \   Forestry Division                }
+{ Tel:   (902)-893-5696 /______\  Forest Management Planning       }
+{ Fax:   (902)-893-6102    |      Resource Analysis Group          }
+{==================================================================}
+
+;-------------------------------------------------------------------------------------
+; Global Constants
+;-------------------------------------------------------------------------------------
+  regionAll Eastern,Central,Western
+  region Provincial
+
+;-------------------------------------------------------------------------------------
+; Yield Section Constants
+;-------------------------------------------------------------------------------------
+
+  ;DLL Path
+    CLFMdll CLFM64.dll
+
+
+;-------------------------------------------------------------------------------------
+; Optimize Section Constants
+;-------------------------------------------------------------------------------------
+
+  ;Non declying harvest flow sustainability constraint strating period
+  NdyLen 15
+
+ ;List OF Managementunits For Flow Constraints
+  opMUsAll     CRNLICPHP,CRNUNLICE,CRNLICNPL,CRNUNLICC,CRNUNLICW,CRNLICMCF,CRNAILBRV,CRNAILSTC,CRNAILEST,PRVE,PRVC,PRVW,INDE,INDC,INDW
+  opMUsEastern CRNLICPHP,CRNUNLICE,CRNAILESTPRVE,INDE
+  opMUsCentral CRNLICNPL,CRNUNLICC,PRVC,INDC
+  opMUsWestern CRNLICMCF,CRNAILBRV,CRNAILSTC,CRNUNLICW,PRVW,INDW
+  opMUs        PRVE,PRVC,PRVW,INDE,INDC,INDW
+  opMUsPrv     PRVE,PRVC,PRVW,INDE,INDC,INDW
+  opMUsCrn     CRNLICNPL,CRNUNLICC
+  opMUsCrnMos  CRNLICNPL,CRNUNLICC
+  opMUsCrnNoPHP CRNLICNPL,CRNUNLICC
+  
+  ;List of EcoRegions having DWAs
+  opDwaERsAll ER2,ER3,ER4,ER5,ER6,ER7,ER8,ER9
+  opDwaERsEastern ER2,ER3,ER4,ER5,ER8
+  opDwaERsCentral ER3,ER4,ER5,ER6,ER8
+  opDwaERsWestern ER7
+  opDwaERs ER2,ER3,ER4,ER5,ER6,ER7,ER8,ER9
+    
+  ;ELC Unit: Ecoregion List
+  ;opERs ER2,ER3,ER4,ER5,ER6,ER7,ER8,ER9 ;ER1 merged in with ER2
+  opERs ER2,ER3,ER4,ER5,ER6,ER7,ER8,ER9 ;Central ER3FRQ,ER3GAP,ER3IFR,ER4FRQ,ER4GAP,ER4IFR,ER5FRQ,ER5GAP,ER5IFR,ER6FRQ,ER6GAP,ER6IFR,ER7FRQ,ER7GAP,ER7IFR,ER8FRQ,ER9FRQ,ER9GAP,ER9IFR
+
+  ;Select ELC Unit: Ecoregion or Ecodistrict
+  opEUs #opERs 
+
+  ;List of ELC NDR Groups that Repeat Across EUs
+  opNDRALLEUs NDRFRQ,NDRIFR,NDRGAP,MB,AC
+
+  ;List of ELC Ecoregion Based Target Units
+  ;opER1EUs ER1FRQ
+  opER2EUs ER2FRQ,ER2GAP
+  opER3EUs ER3FRQ,ER3GAP,ER3IFR
+  opER4EUs ER4FRQ,ER4IFR,ER4GAP
+  opER5EUs ER5FRQ,ER5GAP,ER5IFR
+  opER6EUs ER6FRQ,ER6GAP,ER6IFR
+  opER7EUs ER7FRQ,ER7GAP,ER7IFR
+  opER8EUs ER8FRQ,ER8IFR
+  opER9EUs ER9GAP,ER9IFR,ER9FRQ
+
+
+
+;-------------------------------------------------------------------------------------
+; Graphics/Outputs Section Scale Factors
+;-------------------------------------------------------------------------------------
+
+  osfopiv_em       1.36986     ; (operational adjustment:Ecological Matrix) : 27% Factor: 1/(0.73)
+  osfoper_em       0.73000     ; (operational adjustment:Ecological Matrix) : 27% Factor: 0.73
+
+  osfopiv_hf       1.00000     ; (operational adjustment:HighProduction) : 0% Factor: 1/(1)
+  osfoper_hf       1.00000     ; (operational adjustment:HighProduction) : 0% Factor: 1
+
+  gsp              5.00000     ; (periodic-annual factor) : 1/(0.2)
+  osp              0.20000     ; (periodic-annual factor) : 0.2
+
+  gsf_em           6.84932     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) : 1/(0.2 * 0.73)
+  osf_em           0.14600     ; (periodic-annual factor) *(operational adjustment:Ecological Matrix) : 0.2 * 0.73
+
+  gsf_hf           5.26316     ; (periodic-annual factor) *  (operational adjustment:HighProduction) : 1/(0.2 * 0.95)
+  osf_hf           0.19000     ; (periodic-annual factor) *(operational adjustment:HighProduction) : 0.2 * 0.95
+
+  gsfst_em         7.96432     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Softwood m3->gmt Conversion)  : 1/(0.2 * 0.73 * 0.86)
+  osfst_em         0.12556     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Softwood m3->gmt Conversion)  : 0.2 * 0.73 * 0.86
+
+  gsfst_hfx        6.72133     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Softwood m3->gmt Conversion)  : 1/(0.2 * 0.865 * 0.86)
+  osfst_hfx        0.14878     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Softwood m3->gmt Conversion)  : 0.2 * 0.865 * 0.86
+
+  gsfst_hf         6.11995     ; (periodic-annual factor) *  (operational adjustment:HighProduction) * (Softwood m3->gmt Conversion)  : 1/(0.2 * 0.95 * 0.86)
+  osfst_hf         0.16340     ; (periodic-annual factor) *  (operational adjustment:HighProduction) * (Softwood m3->gmt Conversion)  : 0.2 * 0.95 * 0.86
+
+  gsfht_em         6.58588     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Hardwood m3->gmt Conversion)  : 1/(0.2 * 0.73 * 1.04)
+  osfht_em         0.15184     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Hardwood m3->gmt Conversion)  : 0.2 * 0.73 * 1.04
+
+  gsfht_hfx        5.55802     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Hardwood m3->gmt Conversion)  : 1/(0.2 * 0.865 * 1.04)
+  osfht_hfx        0.17992     ; (periodic-annual factor) *  (operational adjustment:Ecological Matrix) * (Hardwood m3->gmt Conversion)  : 0.2 * 0.865 * 1.04
+
+  gsfht_hf         5.06073     ; (periodic-annual factor) *  (operational adjustment:HighProduction) * (Hardwood m3->gmt Conversion)  : 1/(0.2 * 0.95 * 1.04)
+  osfht_hf         0.19760     ; (periodic-annual factor) *  (operational adjustment:HighProduction) * (Hardwood m3->gmt Conversion)  : 0.2 * 0.95 * 1.04
+
+  gst              1.16279     ; (Softwood m3->gmt Conversion) : 1/(0.86)
+  ost              0.86000     ; (Softwood m3->gmt Conversion) : 0.86
+
+  ght              0.96154     ; (Hardwood m3->gmt Conversion) : 1/(1.04)
+  oht              1.04000     ; (Hardwood m3->gmt Conversion) : 1.04
+
+
+ 
+;-------------------------------------------------------------------------------------
+; Graphics/Outputs Section Scale Factors For Moose Areas
+;-------------------------------------------------------------------------------------
+  gmossf_em        1.19048     ; expected percent volume lose beyond base oper ajustment factor in MCAs as result of applying current SMP:Ecological Matrix: 16% Factor = 1/0.84
+  gmossf_em        0.84000     ; expected percent volume lose beyond base oper ajustment factor in MCAs as result of applying current SMP:Ecological Matrix: 16% Factor = 0.84
+
+  gmossf_hf        1.00000     ; expected percent volume lose beyond base oper ajustment factor in MCAs as result of applying current SMP:HighProduction: 0% Factor = 1/1
+  gmossf_hf        1.00000     ; expected percent volume lose beyond base oper ajustment factor in MCAs as result of applying current SMP:HighProduction: 0% Factor = 1
+
+  osfopiv_em_mos   1.63079     ; (operational adjustment:Ecological Matrix)*(moose adj%) : 27% Factor: 1/(0.73 * 0.84)
+  osfoper_em_mos   0.61320     ; (operational adjustment:Ecological Matrix)*(moose adj%): 27% Factor: 0.73 * 0.84
+
+  osfopiv_hf_mos   1.00000     ; (operational adjustment:HighProduction)*(moose adj%) : 0% Factor: 1/(1 * 1)
+  osfoper_hf_mos   1.00000     ; (operational adjustment:HighProduction)*(moose adj%): 0% Factor: 1 * 1
+
+  gsf_em_mos       8.15395     ; (periodic-annual factor) * (operational adjustment:Ecological Matrix)*(moose adj%) : 1/(0.2 * 0.73 * 0.84)
+  osf_em_mos       0.12264     ; (periodic-annual factor) * (operational adjustment:Ecological Matrix)*(moose adj%) : 0.2 * 0.73 * 0.84
+
+  gsf_hf_mos       5.00000     ; (periodic-annual factor) * (operational adjustment:HighProduction)*(moose adj%) : 1/(0.2 * 1 * 1)
+  osf_hf_mos       0.20000     ; (periodic-annual factor) * (operational adjustment:HighProduction)*(moose adj%) : 0.2 * 1 * 1
+
+  gsfst_em_mos     9.48133     ; (periodic-annual factor) * (operational adjustment:Ecological Matrix)*(moose adj%) * (Softwood m3->gmt Conversion)  : 1/(0.2 * 0.73 * 0.84 * 0.86)
+  osfst_em_mos     0.10547     ; (periodic-annual factor) * (operational adjustment:Ecological Matrix)*(moose adj%) * (Softwood m3->gmt Conversion)  : 0.2 * 0.73 * 0.84 * 0.86
+
+  gsfst_hf_mos     5.81395     ; (periodic-annual factor) * (operational adjustment:HighProduction)*(moose adj%) * (Softwood m3->gmt Conversion)  : 1/(0.2 * 1 * 1 * 0.86)
+  osfst_hf_mos     0.17200     ; (periodic-annual factor) * (operational adjustment:HighProduction)*(moose adj%) * (Softwood m3->gmt Conversion)  : 0.2 * 1 * 1 * 0.86
+
+  gsfht_em_mos     7.84033     ; (periodic-annual factor) * (operational adjustment:Ecological Matrix)*(moose adj%) * (Hardwood m3->gmt Conversion)  : 1/(0.2 * 0.73 * 0.84 * 1.04)
+  osfht_em_mos     0.12755     ; (periodic-annual factor) * (operational adjustment:Ecological Matrix)*(moose adj%) * (Hardwood m3->gmt Conversion)  : 0.2 * 0.73 * 0.84 * 1.04
+
+  gsfht_hf_mos     4.80769     ; (periodic-annual factor) * (operational adjustment:HighProduction)*(moose adj%) * (Hardwood m3->gmt Conversion)  : 1/(0.2 * 1 * 1 * 1.04)
+  osfht_hf_mos     0.20800     ; (periodic-annual factor) * (operational adjustment:HighProduction)*(moose adj%) * (Hardwood m3->gmt Conversion)  : 0.2 * 1 * 1 * 1.04
+
+
+;-------------------------------------------------------------------------------------
+; Lists used to set scope of outputs as developed through FOREACH structures
+;-------------------------------------------------------------------------------------
+
+  ;Action Lists...Note a parent action group names "ac" were created to get around issues
+  ;...............of iderating the foreach loops with combination of actiona nd regimes
+  ;...............the regime-bracket-action was patricularily problemsome
+  acList acHV,acPH4,acCC4,acCC,acCT,acSH,acSL,acOR,acSV,acPTNR,acPIH,acPBH,acPNH,acEC,acPT,acSC,acHC,arSL,arPP,acFH,acPLm,acPLp,acPLs,acPLh,acPLw,acPLa,acPL
+  acHVgr acCC,acCT,acSH,acSL,acOR,acSC,acHC  ;,acIS,acVR
+  acHV   aCC,aCT,aSH,rSL[aSL],rSL[aOR],aOR,rPP[aSC],rPP[aHC],rHF[aPLct],rHF[aPLcc]
+  acPH1  aCT,aSH,rSL[aSL],rSL[aOR],aOR,rPP[aSC],rPP[aHC]
+  acPH2  aCT,aSH
+  acPH3  aCT,aSH,rSL[aSL],rPP[aSC]
+  acPH4  aCT,aSH,rSL[aSL],rPP[aSC],rPP[aHC]
+  acCC4  aCC,rSL[aOR],aOR
+  acCC   aCC,rHF[aPLcc]
+  acCT   aCT,rHF[aPLct] ;rVR[aCT]
+  acSH   aSH
+  arSL   rSL
+  acSL   rSL[aSL]
+  acPTNR aPT
+  acPLm  aPLrsPIH,aPLRSPBH,aPLrsPNH
+  acOR   rSL[aOR],aOR
+  arPP   rPP
+  acSC   rPP[aSC]
+  acHC   rPP[aHC]
+  acSV   aPL,aEC,aPT
+  acPIH  aPLrsPIH
+  acPBH  aPLRSPBH
+  acPNH  aPLrsPNH
+  ;-------HPF:
+  acPLp    rHF[aPLrs],rHF[aPLws],rHF[aPLns]
+  acPLs    rHF[aPLs]
+  acPLh    rHF[aPLh]
+  acPLw    rHF[aPLw]
+  acPLa    rHF[aPLa]
+  acPL     rHF[aPLrs],rHF[aPLws],rHF[aPLns]
+  ;----------
+  acEC   aEC
+  acPT   aPT
+  acFH   aCC,aOR,rSL[aOR],rPP[aHC] ;...........................:Final Harvest Actions
+
+  ;Main theme lists....used to get aroun having to iderate thought all theme values
+  ;....................alsothe _TH structure does not list any theme aggergates
+  TH01Rep NDRALL,NDRFRQ,NDRIFR,NDRGAP,#opEUs
+  TH02Rep #opMUs,PRVALL,CRNALL,MUALL  ;CRNLICPHP,CRNUNLICE,MUALL ;MUALL,PRVALL,CRNALL,CRNLICPHP,CRNLICNPL,CRNUNLICE,CRNUNLICC,CRNWPUMED,CRNWPUnoMED,INDALL,PRVE,PRVC,PRVW
+  TH09Rep 34 ;3,4,5,6,7,34,4567,567
+  TH10Rep NAU,NAE,NRG,PLX,PCT,CTX,SHX,ESC,DEL,NRX
+
+
+;-------------------------------------------------------------------------------------
+; Penalty Values Discounted @4% [=1/(1+Disc%)^Yrs]
+;   Period1 Period2 Period3 Period4 Period5 Period6 Period7 Period8 Period9 Period10 Period11 Period12 Period13 Period14 Period15 Period16 Period17 Period18 Period19 Period20
+;         1 0.82193 0.67556 0.55526 0.45639 0.37512 0.30832 0.25342 0.20829   0.1712  0.14071  0.11566  0.09506  0.07813  0.06422  0.05278  0.04338  0.03566  0.02931  0.02409
+;-------------------------------------------------------------------------------------
+  Penalty120df4p1 120
+  Penalty120df4p2 99
+  Penalty120df4p3 81
+  Penalty120df4p4 67
+  Penalty120df4p5 55
+  Penalty120df4p6 45
+  Penalty120df4p7 37
+  Penalty120df4p8 30
+  Penalty120df4p9 25
+  Penalty120df4p10 21
+  Penalty120df4p11 17
+  Penalty120df4p12 14
+  Penalty120df4p13 11
+  Penalty120df4p14 9
+  Penalty120df4p15 8
+  Penalty120df4p16 6
+  Penalty120df4p17 5
+  Penalty120df4p18 4
+  Penalty120df4p19 4
+  Penalty120df4p20 3
+
+;-------------------------------------------------------------------------------------
+; Penalty Values Discounted @10% [=1/(1+Disc%)^Yrs]
+;   Period1 Period2 Period3 Period4 Period5 Period6 Period7 Period8 Period9 Period10 Period11 Period12 Period13 Period14 Period15 Period16 Period17 Period18 Period19 Period20
+;    1.0000 0.6209 0.3855 0.2394 0.1486 0.0923 0.0573 0.0356 0.0221 0.0137 0.0085 0.0053 0.0033 0.0020 0.0013 0.0008 0.0005 0.0003 0.0002 0.0001 0.0001
+;-------------------------------------------------------------------------------------
+  Penalty120df10p1  120.000
+  Penalty120df10p2  74.511
+  Penalty120df10p3  46.265
+  Penalty120df10p4  28.727
+  Penalty120df10p5  17.837
+  Penalty120df10p6  11.076
+  Penalty120df10p7  6.877
+  Penalty120df10p8  4.270
+  Penalty120df10p9  2.651
+  Penalty120df10p10 1.646
+  Penalty120df10p11 1.022
+  Penalty120df10p12 0.635
+  Penalty120df10p13 0.394
+  Penalty120df10p14 0.245
+  Penalty120df10p15 0.152
+  Penalty120df10p16 0.094
+  Penalty120df10p17 0.059
+  Penalty120df10p18 0.036
+  Penalty120df10p19 0.023
+  Penalty120df10p20 0.014
+
+
+;-------------------------------------------------------------------------------------
+; EBM Target Percents By NDR
+;-------------------------------------------------------------------------------------
+  ;ELC Units
+   ERs ER2,ER3,ER4,ER5,ER6,ER7,ER8,ER9
+   
+  ;EMB Indicator Targets: Frequent Disturbancce Regime
+  FOREACH ZZ IN(#opEUs)
+    FOREACH XX IN(#opZZEUs) IF(XX CONTAINS %FRQ%)
+      EbmOldXX 0.080
+      EbmM2oXX 0.160
+      EbmMtoXX 0.400
+      EbmLatXX 0.330 ;0.132 ;33% of 40% Mature Target
+      EbmPHXXu 0.250
+      EbmPHXXl 0.150
+    ENDFOR
+    ;#opZZEUs
+  ENDFOR
+
+  ;EMB Indicator Targets: Infrequent Disturbancce Regime
+  FOREACH ZZ IN(#opEUs)
+    FOREACH XX IN(#opZZEUs) IF(XX CONTAINS %IFR%)
+      EbmOldXX 0.160
+      EbmM2oXX 0.270
+      EbmMtoXX 0.600
+      EbmLatXX 0.400 ;0.240 ;40% of 60% Mature Target
+      EbmPHXXu 0.600
+      EbmPHXXl 0.500
+    ENDFOR
+  ENDFOR
+
+  ;EMB Indicator Targets: Gap Disturbancce Regime
+  FOREACH ZZ IN(#opEUs)
+    FOREACH XX IN(#opZZEUs) IF(XX CONTAINS %GAP%)
+      EbmOldXX 0.240
+      EbmM2oXX 0.355
+      EbmMtoXX 0.700
+      EbmLatXX 0.500 ;0.350 ;50% of 70% Mature Target
+      EbmPHXXu 0.850
+      EbmPHXXl 0.750
+    ENDFOR
+  ENDFOR
+
+;10% Partial Harvesting on Private Phase In approach:
+;-------------------------------------------------------------------------------------
+; EBM Compositional Indicator Area Target % were phased in
+; from 20 to 75% participation over a 50yr period
+;-------------------------------------------------------------------------------------
+
+  EbmPhaseInPrv10P1  0.2000
+  EbmPhaseInPrv10P2  0.2611
+  EbmPhaseInPrv10P3  0.3222
+  EbmPhaseInPrv10P4  0.3833
+  EbmPhaseInPrv10P5  0.4444
+  EbmPhaseInPrv10P6  0.5056
+  EbmPhaseInPrv10P7  0.5667
+  EbmPhaseInPrv10P8  0.6278
+  EbmPhaseInPrv10P9  0.6889
+  EbmPhaseInPrv10P10 0.7500
+  EbmPhaseInPrv10P11 0.7500
+  EbmPhaseInPrv10P12 0.7500
+  EbmPhaseInPrv10P13 0.7500
+  EbmPhaseInPrv10P14 0.7500
+  EbmPhaseInPrv10P15 0.7500
+  EbmPhaseInPrv10P16 0.7500
+  EbmPhaseInPrv10P17 0.7500
+  EbmPhaseInPrv10P18 0.7500
+  EbmPhaseInPrv10P19 0.7500
+  EbmPhaseInPrv10P20 0.7500
+
+;-------------------------------------------------------------------------------------
+; EBM Compositional Indicator Area Target % were phased in
+; from 20 to 75% participation over a 50yr period
+;-------------------------------------------------------------------------------------
+
+  EbmPhaseInPrv10SilvP1  0.9000 ; $2.70/m3 SW, $0.54/m3 HW
+  EbmPhaseInPrv10SilvP2  0.8694 ; $2.61/m3 SW, $0.52/m3 HW
+  EbmPhaseInPrv10SilvP3  0.8389 ; $2.52/m3 SW, $0.50/m3 HW
+  EbmPhaseInPrv10SilvP4  0.8083 ; $2.43/m3 SW, $0.49/m3 HW
+  EbmPhaseInPrv10SilvP5  0.7778 ; $2.33/m3 SW, $0.47/m3 HW
+  EbmPhaseInPrv10SilvP6  0.7472 ; $2.24/m3 SW, $0.45/m3 HW
+  EbmPhaseInPrv10SilvP7  0.7167 ; $2.15/m3 SW, $0.43/m3 HW
+  EbmPhaseInPrv10SilvP8  0.6861 ; $2.06/m3 SW, $0.41/m3 HW
+  EbmPhaseInPrv10SilvP9  0.6556 ; $1.97/m3 SW, $0.39/m3 HW
+  EbmPhaseInPrv10SilvP10 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP11 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP12 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP13 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP14 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP15 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP16 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP17 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP18 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP19 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv10SilvP20 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+
+
+;20% Partial Harvesting on Private Phase In approach:
+;-------------------------------------------------------------------------------------
+; EBM Compositional Indicator Area Target % were phased in
+; from 20 to 75% participation over a 50yr period
+;-------------------------------------------------------------------------------------
+
+  EbmPhaseInPrv20P1  0.3000 ;30
+  EbmPhaseInPrv20P2  0.35
+  EbmPhaseInPrv20P3  0.4
+  EbmPhaseInPrv20P4  0.45
+  EbmPhaseInPrv20P5  0.5
+  EbmPhaseInPrv20P6  0.55
+  EbmPhaseInPrv20P7  0.6
+  EbmPhaseInPrv20P8  0.65
+  EbmPhaseInPrv20P9  0.7
+  EbmPhaseInPrv20P10 0.7500
+  EbmPhaseInPrv20P11 0.7500
+  EbmPhaseInPrv20P12 0.7500
+  EbmPhaseInPrv20P13 0.7500
+  EbmPhaseInPrv20P14 0.7500
+  EbmPhaseInPrv20P15 0.7500
+  EbmPhaseInPrv20P16 0.7500
+  EbmPhaseInPrv20P17 0.7500
+  EbmPhaseInPrv20P18 0.7500
+  EbmPhaseInPrv20P19 0.7500
+  EbmPhaseInPrv20P20 0.7500
+
+;-------------------------------------------------------------------------------------
+; EBM Compositional Indicator Area Target % were phased in
+; from 20 to 75% participation over a 50yr period
+;-------------------------------------------------------------------------------------
+
+  EbmPhaseInPrv20SilvP1  0.8000 ;80 ; $2.70/m3 SW, $0.54/m3 HW
+  EbmPhaseInPrv20SilvP2  0.7806 ; $2.61/m3 SW, $0.52/m3 HW
+  EbmPhaseInPrv20SilvP3  0.7611 ; $2.52/m3 SW, $0.50/m3 HW
+  EbmPhaseInPrv20SilvP4  0.7417 ; $2.43/m3 SW, $0.49/m3 HW
+  EbmPhaseInPrv20SilvP5  0.7222 ; $2.33/m3 SW, $0.47/m3 HW
+  EbmPhaseInPrv20SilvP6  0.7028 ; $2.24/m3 SW, $0.45/m3 HW
+  EbmPhaseInPrv20SilvP7  0.6833 ; $2.15/m3 SW, $0.43/m3 HW
+  EbmPhaseInPrv20SilvP8  0.6639 ; $2.06/m3 SW, $0.41/m3 HW
+  EbmPhaseInPrv20SilvP9  0.6444 ; $1.97/m3 SW, $0.39/m3 HW
+  EbmPhaseInPrv20SilvP10 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP11 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP12 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP13 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP14 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP15 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP16 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP17 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP18 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP19 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+  EbmPhaseInPrv20SilvP20 0.6250 ; $1.88/m3 SW, $0.38/m3 HW
+
+
+
+
