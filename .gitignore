@@ -22,6 +22,7 @@
 # Temp Files
 #-----------------------------
 *.xx*
+*.*x
 CLFM.Prescription/
 
 

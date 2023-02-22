@@ -9,7 +9,9 @@
 { ==================================================================}
 
 *OBJECTIVE
-  _MAX  oacHVvHbyMUsfDF10%  * 1.00  + oacHVvPIEHTLbyMUsfDF10%  * 0.25  + oacHVvSPBFbyMUsfDF10%  * 2.00 - _PENALTY(_ALL) 1.._LENGTH
+  ;_MAX  oacHVvHbyMUsfDF10%  * 1.00  + oacHVvPIEHTLbyMUsfDF10%  * 0.25  + oacHVvSPBFbyMUsfDF10%  * 2.00 - _PENALTY(_ALL) 1.._LENGTH
+  
+  _MAX  oacHVvSPBFprLogbyMUtHFsfDF4% + oacHVvHbyMUtEMsfDF4% + oacHVvSbyMUtEMsfDF4% - _PENALTY(_ALL) 1.._LENGTH
 
 
 *CONSTRAINTS
