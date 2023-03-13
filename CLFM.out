@@ -631,6 +631,11 @@
           .IF(YY.rec = 1,*SOURCE,       ) ? ? ? ? ? ? ? ? ? ? ? ? ? ? .IF(XX=NULL,?,XX) .REPLACE(.replace(YY,"[","("),"]",")") _AREA .IF(YY.rec < YY.count,+)
         ENDFOR
         
+        ;with Operational Scalefactor [osf,osf_mos]
+        *OUTPUT ohvKKHabyEU.IF(XX=NULL,,tXX)sf(_TH1) Area Harvested (KK Actions) - ha, Ecological Unit:ThemeBased.IF(XX=NULL, , Triad Zone XX) with Operational Adjustment Factor [osf,osf_mos]
+        *SOURCE ohvKKHabyEU.IF(XX=NULL,,tXX) * ySFosf
+        
+        
       ;by ELC/NDR Zone:  Crown / Private
       *OUTPUT ohvKKHaCrnbyEU.IF(XX=NULL,,tXX)(_TH1) Area Harvested (KK Actions) - ha, Owner: Crown, Th1Based
         FOREACH YY IN(#KK)
