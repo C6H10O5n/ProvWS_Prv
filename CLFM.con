@@ -158,6 +158,7 @@
   ;...............the regime-bracket-action was patricularily problemsome
   acList acHV,acPH4,acCC4,acCC,acCT,acSH,acSL,acOR,acSV,acPTNR,acPIH,acPBH,acPNH,acEC,acPT,acSC,acHC,arSL,arPP,acFH,acPLm,acPLp,acPLs,acPLh,acPLw,acPLa,acPL
   acHVgr acCC,acCT,acSH,acSL,acOR,acSC,acHC  ;,acIS,acVR
+  acHVgr2  acCC,acCT,acSH,acSL,acOR,acSC,acHC ;acVR,acVR10,acVR20,acVR30,acIS,acIS50,acIS70,
   acHV   aCC,aCT,aSH,rSL[aSL],rSL[aOR],aOR,rPP[aSC],rPP[aHC],rHF[aPLct],rHF[aPLcc]
   acPH1  aCT,aSH,rSL[aSL],rSL[aOR],aOR,rPP[aSC],rPP[aHC]
   acPH2  aCT,aSH
