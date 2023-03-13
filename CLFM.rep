@@ -155,6 +155,7 @@
 
       ohvacPTHabyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
       ohvacPTNRHabyMU.IF(YY=NULL,,YY)sf(XX)   0.._LENGTH
+      ohvacECHabyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
       ohvacPTVR10HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
       ohvacPTVR20HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
       ohvacPTVR30HabyMU.IF(YY=NULL,,YY)sf(XX) 0.._LENGTH
@@ -188,6 +189,7 @@
       oPLmCostbyMU.IF(YY=NULL,,YY)sf(XX)     0.._LENGTH
 
       oPTNRCostbyMU.IF(YY=NULL,,YY)sf(XX)    0.._LENGTH
+      oECCostbyMU.IF(YY=NULL,,YY)sf(XX)      0.._LENGTH
       oPTVR10CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
       oPTVR20CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
       oPTVR30CostbyMU.IF(YY=NULL,,YY)sf(XX)  0.._LENGTH
@@ -303,8 +305,8 @@
   ;Wildlife Outputs <GROUP>
   ;-------------------------------------------------
   FOREACH XX IN (EM,HF,NULL) ;Triad
-    FOREACH YY IN (NDRALL,#opEUs)
-      FOREACH ZZ IN (YY,#opYYEUs)
+    FOREACH YY IN (#opEUs)
+      FOREACH ZZ IN (#opYYEUs)
         FOREACH KK IN (FLB,WLB,RLB)
           
           ;Moose
@@ -340,8 +342,8 @@
   ;EBM Outputs <GROUP>
   ;-------------------------------------------------
   FOREACH XX IN (EM,HF,NULL) ;Triad
-    FOREACH YY IN (NDRALL,#opEUs)
-      FOREACH ZZ IN (YY,#opYYEUs)
+    FOREACH YY IN (#opEUs)
+      FOREACH ZZ IN (#opYYEUs)
 
         FOREACH KK IN (FLB,WLB,RLB)
           oELChaKK.IF(XX=NULL,,tXX)(ZZ)
@@ -403,7 +405,7 @@
           oSMHePiSpKK.IF(XX=NULL,,tXX)(ZZ)  0.._LENGTH
         ENDFOR
 
-        FOREACH KK IN (#acHVgr2,acHV)
+        FOREACH KK IN (#acHVgr2)
           ohvKKHabyEU.IF(XX=NULL,,tXX)sf(ZZ)  0.._LENGTH
         ENDFOR
 
@@ -418,7 +420,7 @@
 
   ;Carbon Outputs <GROUP>
   ;Foreach XX in (EM,HF,NULL)
-  ;  FOREACH YY IN (CRNALL,PRVALL,MUALL,#opMUs)
+  ;  FOREACH YY IN (#opMUs)
   ;
   ;    ;Carbon Forest by Landbase
   ;    FOREACH ZZ IN(WLB,RLB,NULL)
@@ -468,7 +470,7 @@
 ;-----------------------------------------------------------------------
 ;*TARGET Carbon.dbf
 ;  Foreach XX in (EM,HF,NULL)
-;    FOREACH YY IN (CRNALL,PRVALL,MUALL,#opMUs)
+;    FOREACH YY IN (#opMUs)
 ;
 ;      ;Carbon Forest by Landbase
 ;      FOREACH ZZ IN(WLB,RLB,NULL)
