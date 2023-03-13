@@ -1,0 +1,425 @@
+*REGIME rSL Shelterwood Regime
+  *OPERABLE rSL _CP 1.._LENGTH
+    ? ? ? ? canHrv ? ? ? ? FTGminusSEL WLB WLB ? ? EM  yHrvCls >= 10 and _AGE <= 20 and yTv >= 100 ; and ysercls = 3 ;and _AGE >= 14
+
+  *PRESCRIPTION Rem40%MngSw
+    *OPERABLE ? ? ? ? ? ? ? ? ? PLPTbased ? ? ? ? ? yforcomm >= 300 and yforcomm <= 499 ;Softwood Plantations and Precommercial Thinnings
+      _RXPERIOD _ACTION  _ENTRY   yTv  yHv  ySv  ySPBFv yPIEHTLv
+          0     aSL      _INITIAL 100% 100% 100% 100%   100%
+          0      -          -      50%  50%  50%  50%    50%
+          1     aOR      _FINAL    50%  50%  50%  50%    50%
+  *PRESCRIPTION Rem40%MngMwHw
+    *OPERABLE ? ? ? ? ? ? ? ? ? PLPTbased ? ? ? ? ? yforcomm <= 299 and ysercls = 3 ;Hardwood/Mixedood Precommercial Thinnings in the late seral class: seral score >= 37
+      _RXPERIOD _ACTION  _ENTRY   yTv  yHv  ySv  ySPBFv yPIEHTLv
+          0     aSL      _INITIAL 100% 100% 100% 100%   100%
+          0      -          -      50%  50%  50%  50%    50%
+          1     aOR      _FINAL    50%  50%  50%  50%    50%
+  *PRESCRIPTION Rem40%NatTolSpp
+    *OPERABLE ? ? ? ? ? ? ? ? ? NATbased ? ? ? ? ? ysercls = 3  ;Stands in the late seral class: seral score >= 37
+      _RXPERIOD _ACTION  _ENTRY   yTv  yHv  ySv  ySPBFv yPIEHTLv
+          0     aSL      _INITIAL 100% 100% 100% 100%   100%
+          0      -          -      50%  50%  50%  50%    50%
+          1     aOR      _FINAL    50%  50%  50%  50%    50%
+
+
+*REGIME rPP Mixedwood Partial Cut two pass harvest regime
+ *OPERABLE rPP _CP 1.._LENGTH
+      ? ? ? ? canHrv ? ? ? ? FTGminusSEL  WLB WLB ? ? EM yHrvCls >= 10 and _AGE <= 20 and yforcomm >= 201 and yforcomm <= 203  and yTv >= 80
+
+    *PRESCRIPTION RemSWthenHW
+    *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+      _RXPERIOD _ACTION  _ENTRY       yHv  ySv  ySPBFv yPIEHTLv
+          0     aSC      _INITIAL     100% 100% 100%   100%
+          0      -              -     100%  00%  00%    00%
+          2     aHC      _FINAL       100%  00%  00%    00%
+          
+          
+
+
+*REGIME rHF High Production Forestry Regime ;<GROUP>
+  *OPERABLE rHF
+    ? ? ? ? ? ? ? ? ? DEL WLB WLB ? ? HFX _Age = 0
+
+
+
+*PRESCRIPTION pWS30PLCC30 ;WS-SI29.9  +PLs1PLa1PLws1PLh1PLw2PLcc6  + Created:  2023-02-12 - 9:16 PM
+    ;GnY Model Scenario:HPFv10aCC:White Spruce Elite Medium Sites (AC10/11)
+    ;  -> Base Inputs:3,Y,N,WS,0,29.94,1736,2.4,2.4,30,20.1,0,0,0,0,0,0,0,85
+    ;  -> Optional Inputs:PPEStockAdj:Y,Ct1TrailAdj:10,Ct2TrailAdj:0,PltAhModel:fAHt2022a,PltTfModel:fTFt2022a,PltTdModel:fTDt2022a,PltIniTdModel:fTDt2022a,PltCtTdModel:fTDt2022a,PltTfMfRatModel:fMFt2022a,PltTbaMbaRatModel:fMBAt2022a,PltMfBfRatModel:fBFt2022a,PltMbaBbaRatModel:fBBAt2022a,PltPostEstabStkModel:fSTK2022a,NatTfModel:fTF2022a,VolCalcMethod:prdYldWeisRatioEq
+    ;  -> Information Inputs:GainPctSI:75.5,RotationMai:11.6
+  *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+  _RXPERIOD _ACTION _ENTRY yState yAge ySv ySPBFv ySPBFvLog ySPBFvStd ySPBFvPlp yPIEHTLv yForComm ySerCls yDevCls ySerDevCls yLITv yLITp yLITc yCtElig yTMAI yMD yB yD yS yOnHpfRxWS yIniHpfRxWS yOnHpfRxPsz
+  ;-----------------------------------------------------------------------------------------------------------------------------------------
+  ;Rx  Act  EntryTyp Stat  Age   Sv SPBF SFlg SFst SFpl PIEH ForC SerC DevC SrDv LITv LIPp LITc CtEl TMai  Tmd   yB   yD   yS oxWS ixWS oxPz
+  ;-- ----- -------- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+   00  aPLs _INITIAL  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1    8
+   ;00 aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1    8
+   00 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1    8
+   00  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1    8
+   01  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0    8
+   02     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0    8
+   03     -        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1    0  7.7 16.8  140    0    0    1    0    8
+   04     -        -  400   25  237  237  100  109   25    0  302    1    2   12    0    0    1    0  9.5 18.7  187    0    0    1    0    8
+   05 aPLcc        -  400   30  315  315  177  111   25    0  302    1    2   12    0    0    1    0 10.5 20.1  227    0    0    1    0    8
+   05  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   05  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   05 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   05  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   06  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0    8
+   07     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0    8
+   08     -        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1    0  7.7 16.8  140    0    0    1    0    8
+   09     -        -  400   25  237  237  100  109   25    0  302    1    2   12    0    0    1    0  9.5 18.7  187    0    0    1    0    8
+   10 aPLcc        -  400   30  315  315  177  111   25    0  302    1    2   12    0    0    1    0 10.5 20.1  227    0    0    1    0    8
+   10  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   10  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   10 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   10  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   11  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0    8
+   12     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0    8
+   13     -        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1    0  7.7 16.8  140    0    0    1    0    8
+   14     -        -  400   25  237  237  100  109   25    0  302    1    2   12    0    0    1    0  9.5 18.7  187    0    0    1    0    8
+   15 aPLcc        -  400   30  315  315  177  111   25    0  302    1    2   12    0    0    1    0 10.5 20.1  227    0    0    1    0    8
+   15  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   15  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   15 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   15  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   16  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0    8
+   17     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0    8
+   18     -        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1    0  7.7 16.8  140    0    0    1    0    8
+   19     -        -  400   25  237  237  100  109   25    0  302    1    2   12    0    0    1    0  9.5 18.7  187    0    0    1    0    8
+   20 aPLcc        -  400   30  315  315  177  111   25    0  302    1    2   12    0    0    1    0 10.5 20.1  227    0    0    1    0    8
+   20  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   20  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   20 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   20  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0    8
+   21  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0    8
+   22     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0    8
+   23     -        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1    0  7.7 16.8  140    0    0    1    0    8
+   24     -        -  400   25  237  237  100  109   25    0  302    1    2   12    0    0    1    0  9.5 18.7  187    0    0    1    0    8
+   25 aPLcc   _FINAL  400   30  315  315  177  111   25    0  302    1    2   12    0    0    1    0 10.5 20.1  227    0    0    1    0    8
+
+
+*PRESCRIPTION pWS30PLCT20CC35 ;WS-SI29.9  +PLs1PLa1PLws1PLh1PLw2PLct4PLcc7  + Created:  2023-02-12 - 9:16 PM
+    ;GnY Model Scenario:HPFv10aCTCC:White Spruce Elite Medium Sites (AC10/11)
+    ;  -> Base Inputs:3,Y,N,WS,0,29.94,1736,2.4,2.4,35,24.7,20,0,16.8,0,30,0,0,85
+    ;  -> Optional Inputs:PPEStockAdj:Y,Ct1TrailAdj:10,Ct2TrailAdj:0,PltAhModel:fAHt2022a,PltTfModel:fTFt2022a,PltTdModel:fTDt2022a,PltIniTdModel:fTDt2022a,PltCtTdModel:fTDt2022a,PltTfMfRatModel:fMFt2022a,PltTbaMbaRatModel:fMBAt2022a,PltMfBfRatModel:fBFt2022a,PltMbaBbaRatModel:fBBAt2022a,PltPostEstabStkModel:fSTK2022a,NatTfModel:fTF2022a,VolCalcMethod:prdYldWeisRatioEq
+    ;  -> Information Inputs:GainPctSI:75.5,RotationMai:10.9
+  *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+  _RXPERIOD _ACTION _ENTRY yState yAge ySv ySPBFv ySPBFvLog ySPBFvStd ySPBFvPlp yPIEHTLv yForComm ySerCls yDevCls ySerDevCls yLITv yLITp yLITc yCtElig yTMAI yMD yB yD yS yOnHpfRxWS yIniHpfRxWS yOnHpfRxPsz
+  ;-----------------------------------------------------------------------------------------------------------------------------------------
+  ;Rx  Act  EntryTyp Stat  Age   Sv SPBF SFlg SFst SFpl PIEH ForC SerC DevC SrDv LITv LIPp LITc CtEl TMai  Tmd   yB   yD   yS oxWS ixWS oxPz
+  ;-- ----- -------- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+   00  aPLs _INITIAL  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1   10
+   ;00 aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1   10
+   00 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1   10
+   00  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    1   10
+   01  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0   10
+   02     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0   10
+   03 aPLct        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1   10  7.7 16.8  140    0    0    1    0   10
+   03     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  0.0  0.0   75    0    0    1    0   10
+   03     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  7.7 18.2   75    0    0    1    0   10
+   04     -        -  411   25  158  158  100   47   11    0  302    1    2   12    0    0    1    0  9.2 21.0  125    0    0    1    0   10
+   05     -        -  411   30  218  218  169   39   10    0  302    1    2   12    0    0    1    0  9.7 23.1  158    0    0    1    0   10
+   06 aPLcc        -  411   35  275  275  234   32    9    0  302    1    2   12    0    0    1    0  9.9 24.7  188    0    0    1    0   10
+   06  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   06  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   06 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   06  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   07  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0   10
+   08     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0   10
+   09 aPLct        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1   10  7.7 16.8  140    0    0    1    0   10
+   09     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  0.0  0.0   75    0    0    1    0   10
+   09     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  7.7 18.2   75    0    0    1    0   10
+   10     -        -  411   25  158  158  100   47   11    0  302    1    2   12    0    0    1    0  9.2 21.0  125    0    0    1    0   10
+   11     -        -  411   30  218  218  169   39   10    0  302    1    2   12    0    0    1    0  9.7 23.1  158    0    0    1    0   10
+   12 aPLcc        -  411   35  275  275  234   32    9    0  302    1    2   12    0    0    1    0  9.9 24.7  188    0    0    1    0   10
+   12  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   12  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   12 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   12  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   13  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0   10
+   14     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0   10
+   15 aPLct        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1   10  7.7 16.8  140    0    0    1    0   10
+   15     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  0.0  0.0   75    0    0    1    0   10
+   15     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  7.7 18.2   75    0    0    1    0   10
+   16     -        -  411   25  158  158  100   47   11    0  302    1    2   12    0    0    1    0  9.2 21.0  125    0    0    1    0   10
+   17     -        -  411   30  218  218  169   39   10    0  302    1    2   12    0    0    1    0  9.7 23.1  158    0    0    1    0   10
+   18 aPLcc        -  411   35  275  275  234   32    9    0  302    1    2   12    0    0    1    0  9.9 24.7  188    0    0    1    0   10
+   18  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   18  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   18 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   18  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    5    0    0    1    0   10
+   19  aPLw        -  400   10   17   17    0    0   17    0  302    1    1   11    0    0    1    0  1.7 11.0   37    0    0    1    0   10
+   20     -        -  400   15   75   75    2   45   19    0  302    1    1   11    0    0    1    0  5.0 14.2   86    0    0    1    0   10
+   21 aPLct        -  400   20  155  155   34   91   23    0  302    1    1   11    0    0    1   10  7.7 16.8  140    0    0    1    0   10
+   21     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  0.0  0.0   75    0    0    1    0   10
+   21     -        -  411   20   83   83   18   49   13    0  302    1    1   11    0    0    1    0  7.7 18.2   75    0    0    1    0   10
+   22     -        -  411   25  158  158  100   47   11    0  302    1    2   12    0    0    1    0  9.2 21.0  125    0    0    1    0   10
+   23     -        -  411   30  218  218  169   39   10    0  302    1    2   12    0    0    1    0  9.7 23.1  158    0    0    1    0   10
+   24 aPLcc   _FINAL  411   35  275  275  234   32    9    0  302    1    2   12    0    0    1    0  9.9 24.7  188    0    0    1    0   10
+
+
+
+*PRESCRIPTION pWS25PLCC40 ;WS-SI24.6  +PLs1PLa1PLws1PLh1PLw2PLcc8  + Created:  2/26/2023 - 6:06 PM
+    ;GnY Model Scenario:HPFv10aCC:White Spruce Medium Sites (AC10/11)
+    ;  -> Base Inputs:3,Y,N,WS,0,24.59,1736,2.4,2.4,40,20.4,0,0,0,0,0,0,0,85
+    ;  -> Optional Inputs:PPEStockAdj:Y,Ct1TrailAdj:10,Ct2TrailAdj:0,PltAhModel:fAHt2022a,PltTfModel:fTFt2022a,PltTdModel:fTDt2022a,PltIniTdModel:fTDt2022a,PltCtTdModel:fTDt2022a,PltTfMfRatModel:fMFt2022a,PltTbaMbaRatModel:fMBAt2022a,PltMfBfRatModel:fBFt2022a,PltMbaBbaRatModel:fBBAt2022a,PltPostEstabStkModel:fSTK2022a,NatTfModel:fTF2022a,VolCalcMethod:prdYldWeisRatioEq
+    ;  -> Information Inputs:GainPctSI:44.1,RotationMai:8.0
+  *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+  _RXPERIOD _ACTION _ENTRY yState yAge ySv ySPBFv ySPBFvLog ySPBFvStd ySPBFvPlp yPIEHTLv yForComm ySerCls yDevCls ySerDevCls yLITv yLITp yLITc yCtElig yTMAI yMD yB yD yS yOnHpfRxWS yIniHpfRxWS yOnHpfRxPsz yOnHpfRxNS yIniHpfRxNS
+  ;---------------------------------------------------------------------------------------------------------------------------------------------------
+  ;Rx  Act  EntryTyp Stat  Age   Sv SPBF SFlg SFst SFpl PIEH ForC SerC DevC SrDv LITv LIPp LITc CtEl TMai  Tmd   yB   yD   yS oxWS ixWS oxPz oxNS ixNS
+  ;-- ----- -------- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+   00  aPLs _INITIAL  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1    8    0    0
+  ;00  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1    8    0    0
+   00 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1    8    0    0
+   00  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1    8    0    0
+   01  aPLw        -  400   10    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    9    0    0    1    0    8    0    0
+   02     -        -  400   15   28   28    0    8   13    0  302    1    1   11    0    0    1    0  1.9 11.9   25    0    0    1    0    8    0    0
+   03     -        -  400   20   76   76    3   46   19    0  302    1    1   11    0    0    1    0  3.8 14.4   44    0    0    1    0    8    0    0
+   04     -        -  400   25  132  132   25   80   21    0  302    1    2   12    0    0    1    0  5.3 16.5   63    0    0    1    0    8    0    0
+   05     -        -  400   30  188  188   67   95   22    0  302    1    2   12    0    0    1    0  6.3 18.1   79    0    0    1    0    8    0    0
+   06     -        -  400   35  242  242  118   99   22    0  302    1    2   12    0    0    1    0  6.9 19.4   94    0    0    1    0    8    0    0
+   07 aPLcc        -  400   40  291  291  170   97   22    0  302    1    3   13    0    0    1    0  7.3 20.4  106    0    0    1    0    8    0    0
+   07  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   07  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   07 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   07  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   08  aPLw        -  400   10    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    9    0    0    1    0    8    0    0
+   09     -        -  400   15   28   28    0    8   13    0  302    1    1   11    0    0    1    0  1.9 11.9   25    0    0    1    0    8    0    0
+   10     -        -  400   20   76   76    3   46   19    0  302    1    1   11    0    0    1    0  3.8 14.4   44    0    0    1    0    8    0    0
+   11     -        -  400   25  132  132   25   80   21    0  302    1    2   12    0    0    1    0  5.3 16.5   63    0    0    1    0    8    0    0
+   12     -        -  400   30  188  188   67   95   22    0  302    1    2   12    0    0    1    0  6.3 18.1   79    0    0    1    0    8    0    0
+   13     -        -  400   35  242  242  118   99   22    0  302    1    2   12    0    0    1    0  6.9 19.4   94    0    0    1    0    8    0    0
+   14 aPLcc        -  400   40  291  291  170   97   22    0  302    1    3   13    0    0    1    0  7.3 20.4  106    0    0    1    0    8    0    0
+   14  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   14  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   14 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   14  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0    8    0    0
+   15  aPLw        -  400   10    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    9    0    0    1    0    8    0    0
+   16     -        -  400   15   28   28    0    8   13    0  302    1    1   11    0    0    1    0  1.9 11.9   25    0    0    1    0    8    0    0
+   17     -        -  400   20   76   76    3   46   19    0  302    1    1   11    0    0    1    0  3.8 14.4   44    0    0    1    0    8    0    0
+   18     -        -  400   25  132  132   25   80   21    0  302    1    2   12    0    0    1    0  5.3 16.5   63    0    0    1    0    8    0    0
+   19     -        -  400   30  188  188   67   95   22    0  302    1    2   12    0    0    1    0  6.3 18.1   79    0    0    1    0    8    0    0
+   20     -        -  400   35  242  242  118   99   22    0  302    1    2   12    0    0    1    0  6.9 19.4   94    0    0    1    0    8    0    0
+   21 aPLcc   _FINAL  400   40  291  291  170   97   22    0  302    1    3   13    0    0    1    0  7.3 20.4  106    0    0    1    0    8    0    0
+
+
+*PRESCRIPTION pWS25PLCT25CC45 ;WS-SI24.6  +PLs1PLa1PLws1PLh1PLw2PLct5PLcc9  + Created:  2/26/2023 - 6:06 PM
+    ;GnY Model Scenario:HPFv10aCTCC:White Spruce Medium Sites (AC10/11)
+    ;  -> Base Inputs:3,Y,N,WS,0,24.59,1736,2.4,2.4,45,24.9,25,0,16.5,0,30,0,0,85
+    ;  -> Optional Inputs:PPEStockAdj:Y,Ct1TrailAdj:10,Ct2TrailAdj:0,PltAhModel:fAHt2022a,PltTfModel:fTFt2022a,PltTdModel:fTDt2022a,PltIniTdModel:fTDt2022a,PltCtTdModel:fTDt2022a,PltTfMfRatModel:fMFt2022a,PltTbaMbaRatModel:fMBAt2022a,PltMfBfRatModel:fBFt2022a,PltMbaBbaRatModel:fBBAt2022a,PltPostEstabStkModel:fSTK2022a,NatTfModel:fTF2022a,VolCalcMethod:prdYldWeisRatioEq
+    ;  -> Information Inputs:GainPctSI:44.1,RotationMai:7.3
+  *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+  _RXPERIOD _ACTION _ENTRY yState yAge ySv ySPBFv ySPBFvLog ySPBFvStd ySPBFvPlp yPIEHTLv yForComm ySerCls yDevCls ySerDevCls yLITv yLITp yLITc yCtElig yTMAI yMD yB yD yS yOnHpfRxWS yIniHpfRxWS yOnHpfRxPsz
+  ;-----------------------------------------------------------------------------------------------------------------------------------------
+  ;Rx  Act  EntryTyp Stat  Age   Sv SPBF SFlg SFst SFpl PIEH ForC SerC DevC SrDv LITv LIPp LITc CtEl TMai  Tmd   yB   yD   yS oxWS ixWS oxPz
+  ;-- ----- -------- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+   00  aPLs _INITIAL  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1   10
+  ;00  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1   10
+   00 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1   10
+   00  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    1   10
+   01  aPLw        -  400   10    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    9    0    0    1    0   10
+   02     -        -  400   15   28   28    0    8   13    0  302    1    1   11    0    0    1    0  1.9 11.9   25    0    0    1    0   10
+   03     -        -  400   20   76   76    3   46   19    0  302    1    1   11    0    0    1    0  3.8 14.4   44    0    0    1    0   10
+   04 aPLct        -  400   25  132  132   25   80   21    0  302    1    2   12    0    0    1   10  5.3 16.5   63    0    0    1    0   10
+   04     -        -  411   25   71   71   14   43   11    0  302    1    2   12    0    0    1    0  0.0  0.0   34    0    0    1    0   10
+   04     -        -  411   25   71   71   14   43   11    0  302    1    2   12    0    0    1    0  5.3 17.9   34    0    0    1    0   10
+   05     -        -  411   30  125  125   71   43   10    0  302    1    2   12    0    0    1    0  6.2 20.2   53    0    0    1    0   10
+   06     -        -  411   35  166  166  119   38    9    0  302    1    2   12    0    0    1    0  6.5 22.1   65    0    0    1    0   10
+   07     -        -  411   40  205  205  165   32    9    0  302    1    3   13    0    0    1    0  6.6 23.6   75    0    0    1    0   10
+   08 aPLcc        -  411   45  240  240  205   27    8    0  302    1    3   13    0    0    1    0  6.7 24.9   84    0    0    1    0   10
+   08  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   08  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   08 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   08  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   09  aPLw        -  400   10    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    9    0    0    1    0   10
+   10     -        -  400   15   28   28    0    8   13    0  302    1    1   11    0    0    1    0  1.9 11.9   25    0    0    1    0   10
+   11     -        -  400   20   76   76    3   46   19    0  302    1    1   11    0    0    1    0  3.8 14.4   44    0    0    1    0   10
+   12 aPLct        -  400   25  132  132   25   80   21    0  302    1    2   12    0    0    1   10  5.3 16.5   63    0    0    1    0   10
+   12     -        -  411   25   71   71   14   43   11    0  302    1    2   12    0    0    1    0  0.0  0.0   34    0    0    1    0   10
+   12     -        -  411   25   71   71   14   43   11    0  302    1    2   12    0    0    1    0  5.3 17.9   34    0    0    1    0   10
+   13     -        -  411   30  125  125   71   43   10    0  302    1    2   12    0    0    1    0  6.2 20.2   53    0    0    1    0   10
+   14     -        -  411   35  166  166  119   38    9    0  302    1    2   12    0    0    1    0  6.5 22.1   65    0    0    1    0   10
+   15     -        -  411   40  205  205  165   32    9    0  302    1    3   13    0    0    1    0  6.6 23.6   75    0    0    1    0   10
+   16 aPLcc        -  411   45  240  240  205   27    8    0  302    1    3   13    0    0    1    0  6.7 24.9   84    0    0    1    0   10
+   16  aPLs        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   16  aPLa        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   16 aPLws        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   16  aPLh        -  400    5    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    0    0    0    1    0   10
+   17  aPLw        -  400   10    0    0    0    0    0    0  302    1    1   11    0    0    1    0  0.0  0.0    9    0    0    1    0   10
+   18     -        -  400   15   28   28    0    8   13    0  302    1    1   11    0    0    1    0  1.9 11.9   25    0    0    1    0   10
+   19     -        -  400   20   76   76    3   46   19    0  302    1    1   11    0    0    1    0  3.8 14.4   44    0    0    1    0   10
+   20 aPLct        -  400   25  132  132   25   80   21    0  302    1    2   12    0    0    1   10  5.3 16.5   63    0    0    1    0   10
+   20     -        -  411   25   71   71   14   43   11    0  302    1    2   12    0    0    1    0  0.0  0.0   34    0    0    1    0   10
+   20     -        -  411   25   71   71   14   43   11    0  302    1    2   12    0    0    1    0  5.3 17.9   34    0    0    1    0   10
+   21     -        -  411   30  125  125   71   43   10    0  302    1    2   12    0    0    1    0  6.2 20.2   53    0    0    1    0   10
+   22     -        -  411   35  166  166  119   38    9    0  302    1    2   12    0    0    1    0  6.5 22.1   65    0    0    1    0   10
+   23     -        -  411   40  205  205  165   32    9    0  302    1    3   13    0    0    1    0  6.6 23.6   75    0    0    1    0   10
+   24 aPLcc   _FINAL  411   45  240  240  205   27    8    0  302    1    3   13    0    0    1    0  6.7 24.9   84    0    0    1    0   10
+
+
+*PRESCRIPTION pRS23PLCC40 ;RS-SI22.5  +PLs1PLa1PLrs1PLh1PLw2PLcc8  + Created:  2/26/2023 - 6:06 PM
+    ;GnY Model Scenario:HPFv10aCC:Red Spruce Medium Sites (AC10/11)
+    ;  -> Base Inputs:3,Y,N,RS,0,22.52,1736,2.4,2.4,40,21.3,0,0,0,0,0,0,0,85
+    ;  -> Optional Inputs:PPEStockAdj:Y,Ct1TrailAdj:10,Ct2TrailAdj:0,PltAhModel:fAHt2022a,PltTfModel:fTFt2022a,PltTdModel:fTDt2022a,PltIniTdModel:fTDt2022a,PltCtTdModel:fTDt2022a,PltTfMfRatModel:fMFt2022a,PltTbaMbaRatModel:fMBAt2022a,PltMfBfRatModel:fBFt2022a,PltMbaBbaRatModel:fBBAt2022a,PltPostEstabStkModel:fSTK2022a,NatTfModel:fTF2022a,VolCalcMethod:prdYldWeisRatioEq
+    ;  -> Information Inputs:GainPctSI:38.8,RotationMai:9.1
+  *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+  _RXPERIOD _ACTION _ENTRY yState yAge ySv ySPBFv ySPBFvLog ySPBFvStd ySPBFvPlp yPIEHTLv yForComm ySerCls yDevCls ySerDevCls yLITv yLITp yLITc yCtElig yTMAI yMD yB yD yS yOnHpfRxRS yIniHpfRxRS yOnHpfRxPsz
+  ;-----------------------------------------------------------------------------------------------------------------------------------------
+  ;Rx  Act  EntryTyp Stat  Age   Sv SPBF SFlg SFst SFpl PIEH ForC SerC DevC SrDv LITv LIPp LITc CtEl TMai  Tmd   yB   yD   yS oxRS ixRS oxPz
+  ;-- ----- -------- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+   00  aPLs _INITIAL  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1    8
+  ;00  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1    8
+   00 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1    8
+   00  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1    8
+   01  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0    8
+   02     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0    8
+   03     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0    8
+   04     -        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3    0  5.3 16.9   55    0    0    1    0    8
+   05     -        -  400   30  193  193   80   90   20    0  301    3    2   32  193  100    3    0  6.4 18.7   79    0    0    1    0    8
+   06     -        -  400   35  253  253  141   90   20    0  301    3    2   32  253  100    3    0  7.2 20.1  104    0    0    1    0    8
+   07 aPLcc        -  400   40  307  307  203   85   20    0  301    3    3   33  307  100    3    0  7.7 21.3  126    0    0    1    0    8
+   07  aPLs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   07  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   07 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   07  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   08  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0    8
+   09     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0    8
+   10     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0    8
+   11     -        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3    0  5.3 16.9   55    0    0    1    0    8
+   12     -        -  400   30  193  193   80   90   20    0  301    3    2   32  193  100    3    0  6.4 18.7   79    0    0    1    0    8
+   13     -        -  400   35  253  253  141   90   20    0  301    3    2   32  253  100    3    0  7.2 20.1  104    0    0    1    0    8
+   14 aPLcc        -  400   40  307  307  203   85   20    0  301    3    3   33  307  100    3    0  7.7 21.3  126    0    0    1    0    8
+   14  aPLs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   14  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   14 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   14  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0    8
+   15  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0    8
+   16     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0    8
+   17     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0    8
+   18     -        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3    0  5.3 16.9   55    0    0    1    0    8
+   19     -        -  400   30  193  193   80   90   20    0  301    3    2   32  193  100    3    0  6.4 18.7   79    0    0    1    0    8
+   20     -        -  400   35  253  253  141   90   20    0  301    3    2   32  253  100    3    0  7.2 20.1  104    0    0    1    0    8
+   21 aPLcc   _FINAL  400   40  307  307  203   85   20    0  301    3    3   33  307  100    3    0  7.7 21.3  126    0    0    1    0    8
+
+
+*PRESCRIPTION pRS23PLCT25CC45 ;RS-SI22.5  +PLs1PLa1PLrs1PLh1PLw2PLct5PLcc9  + Created:  2/26/2023 - 6:06 PM
+    ;GnY Model Scenario:HPFv10aCTCC:Red Spruce Medium Sites (AC10/11)
+    ;  -> Base Inputs:3,Y,N,RS,0,22.52,1736,2.4,2.4,45,25.9,25,0,16.9,0,30,0,0,85
+    ;  -> Optional Inputs:PPEStockAdj:Y,Ct1TrailAdj:10,Ct2TrailAdj:0,PltAhModel:fAHt2022a,PltTfModel:fTFt2022a,PltTdModel:fTDt2022a,PltIniTdModel:fTDt2022a,PltCtTdModel:fTDt2022a,PltTfMfRatModel:fMFt2022a,PltTbaMbaRatModel:fMBAt2022a,PltMfBfRatModel:fBFt2022a,PltMbaBbaRatModel:fBBAt2022a,PltPostEstabStkModel:fSTK2022a,NatTfModel:fTF2022a,VolCalcMethod:prdYldWeisRatioEq
+    ;  -> Information Inputs:GainPctSI:38.8,RotationMai:8.5
+  *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+  _RXPERIOD _ACTION _ENTRY yState yAge ySv ySPBFv ySPBFvLog ySPBFvStd ySPBFvPlp yPIEHTLv yForComm ySerCls yDevCls ySerDevCls yLITv yLITp yLITc yCtElig yTMAI yMD yB yD yS yOnHpfRxRS yIniHpfRxRS yOnHpfRxPsz
+  ;-----------------------------------------------------------------------------------------------------------------------------------------
+  ;Rx  Act  EntryTyp Stat  Age   Sv SPBF SFlg SFst SFpl PIEH ForC SerC DevC SrDv LITv LIPp LITc CtEl TMai  Tmd   yB   yD   yS oxRS ixRS oxPz
+  ;-- ----- -------- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+   00  aPLs _INITIAL  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   10
+  ;00  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   10
+   00 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   10
+   00  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   10
+   01  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0   10
+   02     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0   10
+   03     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0   10
+   04 aPLct        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3   10  5.3 16.9   55    0    0    1    0   10
+   04     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  0.0  0.0   30    0    0    1    0   10
+   04     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  5.3 18.2   30    0    0    1    0   10
+   05     -        -  411   30  128  128   78   40    9    0  301    3    2   32  128  100    3    0  6.3 20.7   52    0    0    1    0   10
+   06     -        -  411   35  173  173  131   34    9    0  301    3    2   32  173  100    3    0  6.7 22.8   70    0    0    1    0   10
+   07     -        -  411   40  219  219  183   28    8    0  301    3    3   33  219  100    3    0  7.0 24.4   89    0    0    1    0   10
+   08 aPLcc        -  411   45  264  264  233   23    7    0  301    3    3   33  264  100    3    0  7.2 25.9  108    0    0    1    0   10
+   08  aPLs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   08  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   08 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   08  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   09  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0   10
+   10     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0   10
+   11     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0   10
+   12 aPLct        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3   10  5.3 16.9   55    0    0    1    0   10
+   12     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  0.0  0.0   30    0    0    1    0   10
+   12     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  5.3 18.2   30    0    0    1    0   10
+   13     -        -  411   30  128  128   78   40    9    0  301    3    2   32  128  100    3    0  6.3 20.7   52    0    0    1    0   10
+   14     -        -  411   35  173  173  131   34    9    0  301    3    2   32  173  100    3    0  6.7 22.8   70    0    0    1    0   10
+   15     -        -  411   40  219  219  183   28    8    0  301    3    3   33  219  100    3    0  7.0 24.4   89    0    0    1    0   10
+   16 aPLcc        -  411   45  264  264  233   23    7    0  301    3    3   33  264  100    3    0  7.2 25.9  108    0    0    1    0   10
+   16  aPLs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   16  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   16 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   16  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   10
+   17  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0   10
+   18     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0   10
+   19     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0   10
+   20 aPLct        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3   10  5.3 16.9   55    0    0    1    0   10
+   20     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  0.0  0.0   30    0    0    1    0   10
+   20     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  5.3 18.2   30    0    0    1    0   10
+   21     -        -  411   30  128  128   78   40    9    0  301    3    2   32  128  100    3    0  6.3 20.7   52    0    0    1    0   10
+   22     -        -  411   35  173  173  131   34    9    0  301    3    2   32  173  100    3    0  6.7 22.8   70    0    0    1    0   10
+   23     -        -  411   40  219  219  183   28    8    0  301    3    3   33  219  100    3    0  7.0 24.4   89    0    0    1    0   10
+   24 aPLcc   _FINAL  411   45  264  264  233   23    7    0  301    3    3   33  264  100    3    0  7.2 25.9  108    0    0    1    0   10
+
+
+*PRESCRIPTION pRS23PLCT25CT35CC50 ;RS-SI22.5  +PLs1PLa1PLrs1PLh1PLw2PLct5PLct7PLcc10  + Created:  2/26/2023 - 6:06 PM
+    ;GnY Model Scenario:HPFv10aCTCTCC:Red Spruce Medium Sites (AC10/11)
+    ;  -> Base Inputs:3,Y,N,RS,0,22.52,1736,2.4,2.4,50,30.7,25,35,16.9,22.8,30,30,0,85
+    ;  -> Optional Inputs:PPEStockAdj:Y,Ct1TrailAdj:10,Ct2TrailAdj:0,PltAhModel:fAHt2022a,PltTfModel:fTFt2022a,PltTdModel:fTDt2022a,PltIniTdModel:fTDt2022a,PltCtTdModel:fTDt2022a,PltTfMfRatModel:fMFt2022a,PltTbaMbaRatModel:fMBAt2022a,PltMfBfRatModel:fBFt2022a,PltMbaBbaRatModel:fBBAt2022a,PltPostEstabStkModel:fSTK2022a,NatTfModel:fTF2022a,VolCalcMethod:prdYldWeisRatioEq
+    ;  -> Information Inputs:GainPctSI:38.8,RotationMai:8.6
+  *OPERABLE ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+  _RXPERIOD _ACTION _ENTRY yState yAge ySv ySPBFv ySPBFvLog ySPBFvStd ySPBFvPlp yPIEHTLv yForComm ySerCls yDevCls ySerDevCls yLITv yLITp yLITc yCtElig yTMAI yMD yB yD yS yOnHpfRxRS yIniHpfRxRS yOnHpfRxPsz
+  ;-----------------------------------------------------------------------------------------------------------------------------------------
+  ;Rx  Act  EntryTyp Stat  Age   Sv SPBF SFlg SFst SFpl PIEH ForC SerC DevC SrDv LITv LIPp LITc CtEl TMai  Tmd   yB   yD   yS oxRS ixRS oxPz
+  ;-- ----- -------- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+   00  aPLs _INITIAL  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   12
+  ;00  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   12
+   00 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   12
+   00  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    1   12
+   01  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0   12
+   02     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0   12
+   03     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0   12
+   04 aPLct        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3   10  5.3 16.9   55    0    0    1    0   12
+   04     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  0.0  0.0   30    0    0    1    0   12
+   04     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  5.3 18.2   30    0    0    1    0   12
+   05     -        -  411   30  128  128   78   40    9    0  301    3    2   32  128  100    3    0  6.3 20.7   52    0    0    1    0   12
+   06 aPLct        -  411   35  173  173  131   34    9    0  301    3    2   32  173  100    3   40  6.7 22.8   70    0    0    1    0   12
+   06     -        -  421   35  104  104   79   20    5    0  301    3    2   32  104  100    3    0  0.0  0.0   42    0    0    1    0   12
+   06     -        -  421   35  104  104   79   20    5    0  301    3    2   32  104  100    3    0  6.7 24.6   42    0    0    1    0   12
+   07     -        -  421   40  158  158  144   10    4    0  301    3    3   33  158  100    3    0  7.2 26.9   65    0    0    1    0   12
+   08     -        -  421   45  196  196  186    7    3    0  301    3    3   33  196  100    3    0  7.3 28.9   81    0    0    1    0   12
+   09 aPLcc        -  421   50  233  233  225    5    3    0  301    3    3   33  233  100    3    0  7.3 30.7   97    0    0    1    0   12
+   09  aPLs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   09  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   09 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   09  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   10  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0   12
+   11     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0   12
+   12     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0   12
+   13 aPLct        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3   10  5.3 16.9   55    0    0    1    0   12
+   13     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  0.0  0.0   30    0    0    1    0   12
+   13     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  5.3 18.2   30    0    0    1    0   12
+   14     -        -  411   30  128  128   78   40    9    0  301    3    2   32  128  100    3    0  6.3 20.7   52    0    0    1    0   12
+   15 aPLct        -  411   35  173  173  131   34    9    0  301    3    2   32  173  100    3   40  6.7 22.8   70    0    0    1    0   12
+   15     -        -  421   35  104  104   79   20    5    0  301    3    2   32  104  100    3    0  0.0  0.0   42    0    0    1    0   12
+   15     -        -  421   35  104  104   79   20    5    0  301    3    2   32  104  100    3    0  6.7 24.6   42    0    0    1    0   12
+   16     -        -  421   40  158  158  144   10    4    0  301    3    3   33  158  100    3    0  7.2 26.9   65    0    0    1    0   12
+   17     -        -  421   45  196  196  186    7    3    0  301    3    3   33  196  100    3    0  7.3 28.9   81    0    0    1    0   12
+   18 aPLcc        -  421   50  233  233  225    5    3    0  301    3    3   33  233  100    3    0  7.3 30.7   97    0    0    1    0   12
+   18  aPLs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   18  aPLa        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   18 aPLrs        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   18  aPLh        -  400    5    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    0    0    0    1    0   12
+   19  aPLw        -  400   10    0    0    0    0    0    0  301    3    1   31    0  100    3    0  0.0  0.0    4    0    0    1    0   12
+   20     -        -  400   15   31   31    0    8   14    0  301    3    1   31   31  100    3    0  2.0 11.9   15    0    0    1    0   12
+   21     -        -  400   20   77   77    4   48   18    0  301    3    1   31   77  100    3    0  3.9 14.6   33    0    0    1    0   12
+   22 aPLct        -  400   25  133  133   30   79   20    0  301    3    2   32  133  100    3   10  5.3 16.9   55    0    0    1    0   12
+   22     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  0.0  0.0   30    0    0    1    0   12
+   22     -        -  411   25   72   72   16   42   11    0  301    3    2   32   72  100    3    0  5.3 18.2   30    0    0    1    0   12
+   23     -        -  411   30  128  128   78   40    9    0  301    3    2   32  128  100    3    0  6.3 20.7   52    0    0    1    0   12
+   24 aPLct        -  411   35  173  173  131   34    9    0  301    3    2   32  173  100    3   40  6.7 22.8   70    0    0    1    0   12
+   24     -        -  421   35  104  104   79   20    5    0  301    3    2   32  104  100    3    0  0.0  0.0   42    0    0    1    0   12
+   24     -        -  421   35  104  104   79   20    5    0  301    3    2   32  104  100    3    0  6.7 24.6   42    0    0    1    0   12
+   25     -        -  421   40  158  158  144   10    4    0  301    3    3   33  158  100    3    0  7.2 26.9   65    0    0    1    0   12
+   26     -        -  421   45  196  196  186    7    3    0  301    3    3   33  196  100    3    0  7.3 28.9   81    0    0    1    0   12
+   27 aPLcc   _FINAL  421   50  233  233  225    5    3    0  301    3    3   33  233  100    3    0  7.3 30.7   97    0    0    1    0   12
+
+
+
+;<ENDGROUP> rHF

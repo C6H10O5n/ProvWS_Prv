@@ -1,0 +1,246 @@
+{ ==================================================================}
+{                          /\     Nova Scotia                      }
+{                         /  \    Department of Natural Resources  }
+{                        /    \   Forestry Division                }
+{ Tel:   (902)-893-5696 /______\  Forest Management Planning       }
+{ Fax:   (902)-893-6102    |      Resource Analysis Group          }
+{ ==================================================================}
+{ Project     : Crown Lands Strategic Forest Model                 }
+{ ==================================================================}
+
+*OBJECTIVE
+  ;_MAX  oacHVvHbyMUsfDF10%  * 1.00  + oacHVvPIEHTLbyMUsfDF10%  * 0.25  + oacHVvSPBFbyMUsfDF10%  * 2.00 - _PENALTY(_ALL) 1.._LENGTH
+  
+  _MAX  oacHVvSPBFprLogbyMUtHFsfDF4% + oacHVvHbyMUtEMsfDF4% + oacHVvSbyMUtEMsfDF4% - _PENALTY(_ALL) 1.._LENGTH
+
+
+*CONSTRAINTS
+
+  ;Combined HF & EM & NonHPF Zones <GROUP>
+  ;----------------------------------------------------------------------
+
+    ;Silviculture Budget Limit: All funded harvest and silviculture activities
+      oSilvCostbyMUsf <= 20,000,000  1.._LENGTH
+
+    ;Longterm Flow Policy
+    FOREACH XX IN(#opMUs)
+
+      ;NDY FLOW POLICY
+      _NDY(oacHVvSbyMUsf(XX))         1..10 ;>Softwood
+      _NDY(oacHVvSPBFbyMUsf(XX))      1..10 ;>SpruceFir
+      ;_NDY(oacHVvHbyMUsf(XX))         1..10 ;>Hardwood
+
+      ;EVENFLOW POLICY
+      _EVEN(oacHVvSbyMUsf(XX))       10.._LENGTH ;>Softwood
+      _EVEN(oacHVvSPBFbyMUsf(XX))    10.._LENGTH ;>SpruceFir
+      ;_EVEN(oacHVvHbyMUsf(XX))       10.._LENGTH ;>Hardwood
+
+    ENDFOR
+        
+	
+	
+        
+
+  ;<ENDGROUP> EM&HF
+
+
+  ;Ecological Matrix / Non-HPF <GROUP>
+  ;----------------------------------------------------------------------
+
+      ;Wildlife <GROUP>
+      ;----------------------
+        
+        ;Deer
+          ;FOREACH XX IN(#opDwaERs) ; by Ecodistrict on Crown Land Only
+          ; oDeerHaFLBCrnMatSwd(XX)  >= 0.50 * oDeerHaFLBCrnSwd[0](XX)    1.._LENGTH _GOAL(GW2aXX, 9999)
+          ;ENDFOR
+
+      ;<ENDGROUP> Wildlife
+
+
+      ;Ecosystem <GROUP>
+      ;----------------------
+
+        ;Landscape Compositional Indicators Targets by ELC NDR
+        ;---------------------------------------------------
+
+        ;Ecoregion With Periodic Adjustment: Phase-In Approach on Private
+        FOREACH ZZ IN(#opEUs)
+          FOREACH XX IN(#opZZEUs)
+              ;FOREACH YY IN(10..20)
+              ;  oOldCrnFLBXX >= #EbmOldXX * oELCHaCrnFLBXX YY..YY  _GOAL(G111CrnXXYY, 9999)
+              ;ENDFOR
+              FOREACH YY IN(10..20)
+                oOldPrvFLBXX >= #EbmOldXX * #EbmPhaseInPrv20PYY * oELCHaPrvFLBXX YY..YY  _GOAL(G111PrvXXYY, 9999)
+              ENDFOR
+              ;FOREACH YY IN(10..20)
+              ;  oM2oCrnFLB(XX) >= #EbmM2oXX * oELCHaCrnFLB(XX) YY..YY  _GOAL(G113CrnXXYY, 9999)
+              ;ENDFOR
+              ;FOREACH YY IN(10..20)
+              ;  oM2oPrvFLB(XX) >= #EbmM2oXX * #EbmPhaseInPrv20PYY * oELCHaPrvFLB(XX) YY..YY  _GOAL(G113PrvXXYY, 9999)
+              ;ENDFOR
+              ;FOREACH YY IN(1..20)
+              ;  oMtoCrnFLBXX >= #EbmMtoXX * oELCHaCrnFLBXX YY..YY  _GOAL(G115CrnXXYY, 9999)
+              ;ENDFOR
+              FOREACH YY IN(1..20)
+                oMtoPrvFLBXX >= #EbmMtoXX * #EbmPhaseInPrv20PYY * oELCHaPrvFLBXX YY..YY  _GOAL(G115PrvXXYY, 9999)
+              ENDFOR
+              ;FOREACH YY IN(1..20)
+              ;  oLatCrnFLBXX >= #EbmLatXX * oMtoCrnFLBXX   YY..YY  _GOAL(G131CrnXXYY, 9999)
+              ;ENDFOR
+              FOREACH YY IN(1..20)
+                oLatPrvFLBXX >= #EbmLatXX * #EbmPhaseInPrv20PYY * oMtoPrvFLBXX   YY..YY  _GOAL(G131PrvXXYY, 9999)
+              ENDFOR
+              ENDFOR
+        ENDFOR  
+    
+      ;Partial Harvest Targets by ELC NDR
+      ;---------------------------------------------------
+      
+      ;Ecoregion With Periodic Adjustment: Owner Split Phase-In Approach on Private
+      FOREACH ZZ IN(#opEUs)
+        FOREACH XX IN(#opZZEUs)
+          FOREACH YY IN(1..20)
+            ;ohvacPH4HaCrnbyEUtEM(XX) >=  #EbmPHXXl                       * ohvacHVHaCrnbyEUtEM(XX) YY..YY
+            ;ohvacPH4HaCrnbyEUtEM(XX) <=  #EbmPHXXu                       * ohvacHVHaCrnbyEUtEM(XX) YY..YY
+            ohvacPH4HaPrvbyEUtEM(XX) >=  #EbmPHXXl * #EbmPhaseInPrv20PYY * ohvacHVHaPrvbyEUtEM(XX) YY..YY
+            ohvacPH4HaPrvbyEUtEM(XX) <=  #EbmPHXXu * #EbmPhaseInPrv20PYY * ohvacHVHaPrvbyEUtEM(XX) YY..YY
+          ENDFOR
+        ENDFOR
+      ENDFOR
+
+      ;<ENDGROUP> Ecosystem	
+    
+
+      ;LIT <GROUP>
+      ;----------------------------
+
+        ;80% of the Matrix Forest to have 50% LIT by end of planning horzion
+          ;ohaFHbyMUlit10tEM + ohaFHbyMUlit20tEM + ohaFHbyMUlit30tEM + ohaFHbyMUlit40tEM <= 0.20 * ohaFHtEM _LENGTH
+
+
+      ;<ENDGROUP> LIT
+
+
+      ;Carbon <GROUP>
+      ;----------------------------
+
+        ;Carbon Objectives
+          ;.....
+
+
+      ;<ENDGROUP> Carbon
+
+
+      ;Harvest <GROUP>
+      ;----------------------
+
+        ;Harvest Flow Policy:
+        FOREACH XX IN(#opMUs)
+
+          ;NDY FLOW POLICY
+          ;_NDY(oacHVvSbyMUtEMsf(XX))         1..15 ;>Softwood
+          ;_NDY(oacHVvSPBFbyMUtEMsf(XX))      1..15 ;>SpruceFir
+          _NDY(oacHVvHbyMUtEMsf(XX))         1..15 ;>Hardwood
+
+          ;EVENFLOW POLICY
+          ;_EVEN(oacHVvSbyMUtEMsf(XX),10%)    15.._LENGTH ;>Softwood
+          ;_EVEN(oacHVvSPBFbyMUtEMsf(XX),10%) 15.._LENGTH ;>SpruceFir
+          _EVEN(oacHVvHbyMUtEMsf(XX),10%)    15.._LENGTH ;>Hardwood
+
+        ENDFOR
+
+      ;<ENDGROUP> Harvest
+      
+      
+           
+      
+    ;<ENDGROUP> EM
+
+
+  ;High Production Forestry <GROUP>
+  ;----------------------------------------------------------------------
+        
+    ;Harvest Flow Policy
+    FOREACH XX IN(#opMUs)
+      _NDY(oacHVvSPBFprSldbyMUtHFsf(XX))             1..9
+      _EVEN(oacHVvSPBFprSldbyMUtHFsf(XX), 10%)       9.._LENGTH
+      _NDY(oacHVvHbyMUtHFsf(XX))                     1..5
+    ENDFOR
+    
+
+    ;Scenario HPF Area Allocation Traget:
+      ;oHFXareaRemoved(CRNLICPHP) = ohaFHbyMUtHF(CRNLICPHP)[0] * 0.369 1  ;suitable=  XXX ha
+      ;oHFXareaRemoved(CRNUNLICE) = ohaFHbyMUtHF(CRNUNLICE)[0] * 0.369 1  ;suitable=  XXX ha
+      ;oHFXareaRemoved(CRNAILEST) = ohaFHbyMUtHF(CRNAILEST)[0] * 1.000 1  ;suitable=   XXX ha
+      oHFXareaRemoved(PRVE) >= ohaFHbyMUtHF(PRVE)[0] * 0.5 1  ;suitable=  XXX ha
+      oHFXareaRemoved(INDE) >= ohaFHbyMUtHF(INDE)[0] * 0.5 1  ;suitable=  XXX ha
+      
+      ;oHFXareaRemoved(CRNLICNPL) = ohaFHbyMUtHF(CRNLICNPL)[0] * 0.369 1  ;suitable=  15,473 ha
+      ;oHFXareaRemoved(CRNUNLICC) = ohaFHbyMUtHF(CRNUNLICC)[0] * 0.369 1  ;suitable=  XXX ha
+      oHFXareaRemoved(PRVC) >= ohaFHbyMUtHF(PRVC)[0] * 0.6 1  ;suitable=  XXX ha
+      oHFXareaRemoved(INDC) >= ohaFHbyMUtHF(INDC)[0] * 0.6 1  ;suitable=  XXX ha
+      
+      ;oHFXareaRemoved(CRNAILSTC) = ohaFHbyMUtHF(CRNAILSTC)[0] * 1.000 1  ;suitable=   XXX ha
+      ;oHFXareaRemoved(CRNAILBRV) = ohaFHbyMUtHF(CRNAILBRV)[0] * 1.000 1  ;suitable=   XXX ha
+      ;oHFXareaRemoved(CRNLICMCF) = ohaFHbyMUtHF(CRNLICMCF)[0] * 1.000 1  ;suitable=   XXX ha
+      ;oHFXareaRemoved(CRNUNLICW) = ohaFHbyMUtHF(CRNUNLICW)[0] * 0.369 1  ;suitable= XXX ha
+      oHFXareaRemoved(PRVW) >= ohaFHbyMUtHF(PRVW)[0] * 0.5 1  ;suitable=  XXX ha
+      oHFXareaRemoved(INDW) >= ohaFHbyMUtHF(INDW)[0] * 0.5 1  ;suitable=  XXX ha
+
+
+
+
+    FOREACH XX IN(#opMUs)
+      ;Force All Selected HPF area to be On a Regime
+      oHpfOnRxAllByMu(XX) = ohaFHbyMUtHF(XX) 9.._LENGTH
+  
+      ;Transition Period Control
+      ;_Even(oHpfIniRxAllByMusf(XX)) 1..7
+      _SEQ(oHpfIniRxAllByMusf(XX),10%,10%)               1..6
+      oHpfIniRxAllByMu(XX) <= ohaFHbyMUtHF(XX)[2] * 1 / 6    1..9
+      oHFXareaCC(XX) = oHpfIniRxAllByMu(XX)              1..9
+
+      ;Species RX Control: Norway Spruce
+      oHpfIniRxNsByMusf(XX) = 0 1.._LENGTH
+
+      ;Species RX Control:Red Spruce
+      oHpfIniRxRsByMusf(XX) >= 0.30 * oHpfIniRxAllByMusf(XX) 1.._LENGTH
+      oHpfIniRxRsByMusf(XX) <= 0.50 * oHpfIniRxAllByMusf(XX) 1.._LENGTH
+
+      ;Species RX Control:White Spruce
+      oHpfIniRxWsByMusf(XX) >= 0.30 * oHpfIniRxAllByMusf(XX) 1.._LENGTH
+      oHpfIniRxWsByMusf(XX) <= 0.50 * oHpfIniRxAllByMusf(XX) 1.._LENGTH
+    ENDFOR
+
+  ;<ENDGROUP> HF
+  
+  
+*EXCLUDE
+
+;aCC   1.._LENGTH  ;Clearcut Harvest and Leave for natural
+
+;aEC   1.._LENGTH  ;Clearcut followed by Early Competition Control
+
+aPLrSPIH 1.._LENGTH  ;Red Spruce Plantation - Industrial Herbicide Scenario (PIH)
+aPLrSPBH 1.._LENGTH  ;Red Spruce Plantation - Non-Industrial Herbicide Scenario (PBH)
+aPLrSPNH 1.._LENGTH  ;Red Spruce Plantation - Non-Industrial Non-Herbicide Scenario (PNH)
+
+;aPT   1.._LENGTH  ;Precommercial Thinning in Natural Stands
+
+;aCT   1.._LENGTH  ;Commercial Thinning
+;aSHi  1.._LENGTH  ;Selection Harvest
+;aSHr  1.._LENGTH  ;Selection Harvest
+
+;aOR   1.._LENGTH  ;Pre Existing Shelterwood Harvest
+
+;rSL   1.._LENGTH ;Shelterwood Regime
+rPP   1.._LENGTH  ;Mixedwood Partial Cut
+
+;rHF      1.._LENGTH
+aHFregen   1.._LENGTH
+;aHFremove   1.._LENGTH
+
+
+
+*FORMAT MOSEK
